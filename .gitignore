@@ -1,0 +1,37 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Jupyter/IPython
+.ipynb_checkpoints/
+
+# Env / Config
+.env
+.venv/
+env/
+venv/
+*.env
+
+# Modelle / Checkpoints
+*.ckpt
+*.pt
+*.h5
+*.safetensors
+
+# Embedding-Daten
+embeddings/
+*.npy
+
+# Annoy-Index
+annoy_index/
+*.ann
+*.txt
+
+# Bilder
+*.png
+
+# System
+.DS_Store
+Thumbs.db
