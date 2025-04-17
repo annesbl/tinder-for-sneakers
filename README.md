@@ -6,6 +6,14 @@ This project uses **FashionCLIP** to convert sneaker images into embeddings and 
 
 ---
 
+## 📄 Documentation
+
+You can find the original conceptual summary of the project (in German) here:
+
+📘 [Bildbasiertes Empfehlungssystem mit FashionCLIP (PDF)](docs/fashionclip-paper.pdf)
+
+---
+
 ## 📁 Dataset Used
 
 We use the following sneaker dataset from Kaggle:  
