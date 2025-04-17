@@ -1,0 +1,6 @@
+transformers>=4.39.0
+torch>=2.0.0
+kagglehub>=0.1.4
+pillow>=9.0.0
+annoy>=1.17.0
+numpy>=1.23.0
