@@ -10,7 +10,7 @@ This project uses **FashionCLIP** to convert sneaker images into embeddings and 
 
 You can find the original conceptual summary of the project (in German) here:
 
-📘 [Bildbasiertes Empfehlungssystem mit FashionCLIP (PDF)](docs/fashionclip-paper.pdf)
+📘 [Bildbasiertes Empfehlungssystem mit FashionCLIP (PDF)](Bildbasiertes_Empfehlungssystem_mit_FashionCLIP.pdf)
 
 ---
 
