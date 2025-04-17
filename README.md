@@ -26,7 +26,7 @@ It includes sneaker images from well-known brands like Nike, Adidas, and Convers
 ## ⚙️ Installation
 
 ```bash
-git clone https://github.com/your-username/tinder-for-sneakers.git
+git clone https://github.com/AleemHussain/tinder-for-sneakers.git
 cd tinder-for-sneakers
 ```
 
