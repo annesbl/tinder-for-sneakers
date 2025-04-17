@@ -6,21 +6,21 @@ import torch
 from transformers import CLIPProcessor, CLIPModel
 
 # -----------------------------------------------------------
-# 1. Download von Kaggle
+# 1. Download sneaker dataset from Kaggle
 # -----------------------------------------------------------
 
-print("Lade Sneaker-Datensatz von Kaggle ...")
+print("Downloading sneaker dataset from Kaggle...")
 path = kagglehub.dataset_download("die9origephit/nike-adidas-and-converse-imaged")
 
-# Zielordner vorbereiten
+# Prepare output directory
 image_dir = "data"
 os.makedirs(image_dir, exist_ok=True)
 
-# Nur gültige Bilddateien
+# Valid image extensions
 img_extensions = (".jpg", ".jpeg", ".png")
 count = 0
 
-print("Konvertiere und speichere Bilder ...")
+print("Converting and saving images...")
 for root, dirs, files in os.walk(path):
     for file in files:
         if file.lower().endswith(img_extensions):
@@ -31,23 +31,23 @@ for root, dirs, files in os.walk(path):
                 img = Image.open(src).convert("RGB")
                 img.save(dst, format="JPEG")
                 count += 1
-                print(f"[{count}] Bild gespeichert: {file}")
+                print(f"[{count}] Saved image: {file}")
             except Exception as e:
-                print(f"Fehler bei {file}: {e}")
+                print(f"Error processing {file}: {e}")
 
-print(f"Fertig. {count} Bilder im Ordner: {image_dir}/")
+print(f"Done. {count} images saved to: {image_dir}/")
 
 # -----------------------------------------------------------
-# 2. Embeddings mit FashionCLIP erzeugen
+# 2. Generate embeddings using FashionCLIP
 # -----------------------------------------------------------
 
-print("Starte Embedding mit FashionCLIP ...")
+print("Generating embeddings using FashionCLIP...")
 
-# Modell laden
+# Load model and processor
 model = CLIPModel.from_pretrained("patrickjohncyh/fashion-clip")
 processor = CLIPProcessor.from_pretrained("patrickjohncyh/fashion-clip")
 
-# Embedding-Ordner
+# Prepare embedding output directory
 embedding_dir = "embeddings"
 os.makedirs(embedding_dir, exist_ok=True)
 
@@ -58,15 +58,15 @@ def get_embedding(image_path):
         embedding = model.get_image_features(**inputs)
     return embedding[0].numpy()
 
-# Bilder durchgehen und Embedding erzeugen
+# Generate embeddings for all images
 for filename in os.listdir(image_dir):
     if filename.endswith(".jpg"):
         path = os.path.join(image_dir, filename)
         try:
             emb = get_embedding(path)
             np.save(os.path.join(embedding_dir, filename + ".npy"), emb)
-            print(f"Embedding gespeichert für: {filename}")
+            print(f"Saved embedding for: {filename}")
         except Exception as e:
-            print(f"Fehler bei {filename}: {e}")
+            print(f"Error embedding {filename}: {e}")
 
-print("Alle Embeddings erstellt und gespeichert in:", embedding_dir)
+print("All embeddings generated and saved to:", embedding_dir)
