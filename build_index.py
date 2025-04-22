@@ -1,35 +1,37 @@
-from annoy import AnnoyIndex
+from transformers import CLIPProcessor, CLIPModel
+from PIL import Image
+import torch
 import os
 import numpy as np
+from annoy import AnnoyIndex
 
-# Config
+# Lade FashionCLIP
+model = CLIPModel.from_pretrained("patrickjohncyh/fashion-clip")
+processor = CLIPProcessor.from_pretrained("patrickjohncyh/fashion-clip")
+model.eval()
+
+# Bildverzeichnis und Annoy-Index vorbereiten
+image_dir = "shoes"
 embedding_dim = 512
-embedding_dir = "embeddings"
-index_dir = "annoy_index"
-index_file = os.path.join(index_dir, "fashion.ann")
+index = AnnoyIndex(embedding_dim, "angular")
+id_to_filename = []
 
-# Ensure directories exist
-os.makedirs(embedding_dir, exist_ok=True)
-os.makedirs(index_dir, exist_ok=True)
+valid_ext = [".jpg", ".jpeg", ".png"]
 
-# Initialize Annoy index
-index = AnnoyIndex(embedding_dim, 'angular')
-image_filenames = []
+for idx, filename in enumerate(os.listdir(image_dir)):
+    if not any(filename.lower().endswith(ext) for ext in valid_ext):
+        continue
+    image_path = os.path.join(image_dir, filename)
+    image = Image.open(image_path).convert("RGB")
+    inputs = processor(images=image, return_tensors="pt")
 
-# Add all embeddings to the index
-for i, file in enumerate(os.listdir(embedding_dir)):
-    if file.endswith(".npy"):
-        vector = np.load(os.path.join(embedding_dir, file))
-        index.add_item(i, vector)
-        image_filenames.append(file.replace(".npy", ""))
+    with torch.no_grad():
+        embedding = model.get_image_features(**inputs)[0].cpu().numpy()
 
-# Build and save the index
+    index.add_item(idx, embedding)
+    id_to_filename.append(filename)
+
+# Index speichern
 index.build(10)
-index.save(index_file)
-
-# Save the ID-to-filename map
-with open(os.path.join(index_dir, "id_map.txt"), "w") as f:
-    for idx, name in enumerate(image_filenames):
-        f.write(f"{idx},{name}\n")
-
-print(f"[✓] Annoy index saved to: {index_file}")
+index.save("shoe_index.ann")
+np.save("id_to_filename.npy", id_to_filename)
