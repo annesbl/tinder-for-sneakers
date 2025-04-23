@@ -3,3 +3,4 @@ torch>=2.0.0
 pillow>=9.0.0
 annoy>=1.17.0
 numpy>=1.23.0
+matplotlib>=3.5.0
