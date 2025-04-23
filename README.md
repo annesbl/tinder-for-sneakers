@@ -1,4 +1,4 @@
-# Tinder-for-Sneakers
+# Tinder-for-Sneakers (FashionCLIP Version)
 
 A prototype for a swipe-based sneaker recommendation system. Inspired by the user experience of TikTok and Tinder, users can explore sneaker options quickly by swiping through images — finding the right pair in just a few interactions.
 
@@ -40,12 +40,6 @@ source venv/bin/activate  # Windows: venv\Scripts\activate
 # Install dependencies
 pip install -r requirements.txt
 ```
-
-### Prerequisites
-
-- A valid Kaggle API key (`kaggle.json`) is required.  
-  [Get it from your Kaggle account](https://www.kaggle.com/account) and place it in `~/.kaggle/kaggle.json`.
-
 ---
 
 ## 🚀 How to Run
@@ -76,7 +70,11 @@ This creates an Annoy index from the image embeddings and stores it in `annoy_in
 python search_similar.py "test_images/converse/1.jpg"
 ```
 
-This returns the top 5 most similar sneaker images based on the input image.
+This will:
+
+- Embed your query image
+- Retrieve the 5 most similar sneakers using Annoy
+- Display them side-by-side with `matplotlib`
 
 ---
 
@@ -84,7 +82,6 @@ This returns the top 5 most similar sneaker images based on the input image.
 
 - [HuggingFace Transformers](https://huggingface.co) — using `patrickjohncyh/fashion-clip`
 - [Annoy](https://github.com/spotify/annoy) — for fast approximate nearest neighbor search
-- [KaggleHub](https://github.com/ishant1609/KaggleHub) — for automatic dataset download
 - Python 3.10+
 
 ---
@@ -93,21 +90,18 @@ This returns the top 5 most similar sneaker images based on the input image.
 
 ```
 tinder-for-sneakers/
-├── data/                  # Raw images (from Kaggle)
-├── embeddings/            # Saved image embeddings (.npy)
-├── annoy_index/           # Annoy index files (.ann) + ID map
-├── test_images/           # Custom test images (e.g., your own sneaker)
-│   ├── adidas/
-│   ├── converse/
-│   ├── nike/
-│ 
-├── encode_images.py       # Kaggle download + image conversion + embedding
-├── build_index.py         # Build Annoy index from embeddings
-├── search_similar.py      # Find similar images based on input
+├── shoes/                   # Sneaker database (from Kaggle dataset)
+├── query/                   # Image to search with
+│   └── test_shoe.jpg        # Already given some images to test with
 │
-├── README.md              # Project description & instructions
-├── requirements.txt       # Dependencies
-├── .gitignore             # Ignored files/folders
+├── build_index.py           # Embeds all shoes and builds Annoy index
+├── search_similar.py        # Finds similar shoes from query image
+│
+├── shoe_index.ann           # Generated Annoy index (auto)
+├── id_to_filename.npy       # Mapping of image filenames (auto)
+├── .gitignore
+├── requirements.txt
+├── README.md
 ```
 
 ---
