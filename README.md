@@ -47,22 +47,13 @@ pip install -r requirements.txt
 ### 1. Download images and create embeddings
 
 ```bash
-python encode_images.py
-```
-
-This script:
-- Automatically downloads the Kaggle dataset
-- Converts and saves images into the `data/` directory (as `.jpg`)
-- Extracts image embeddings using FashionCLIP
-- Saves them in the `embeddings/` directory
-
-### 2. Build the Annoy index
-
-```bash
 python build_index.py
 ```
 
-This creates an Annoy index from the image embeddings and stores it in `annoy_index/fashion.ann`.
+This script:
+- Extracts image embeddings using FashionCLIP
+- creates an Annoy index from the image embeddings
+
 
 ### 3. Search for similar images (Example)
 
