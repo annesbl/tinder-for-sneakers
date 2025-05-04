@@ -1,0 +1,43 @@
+# Bytecode / Cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Python Environments
+.env
+*.env
+.venv/
+venv/
+env/
+
+# Modelle / Checkpoints (nicht genutzt, aber vorbeugend)
+*.ckpt
+*.pt
+*.h5
+*.safetensors
+
+# Embedding-Daten (werden automatisch generiert)
+embeddings/
+*.npy
+
+# Annoy-Index
+annoy_index/
+*.ann
+annoy_index/id_map.txt
+
+# Rohbilder (automatisch geladen)
+data/*.png
+data/*.jpg
+data/*.jpeg
+
+# Ausnahme für ggf. manuelle Beispielbilder (optional)
+!docs/images/*.png
+!docs/images/*.jpg
+
+# System-Dateien
+.DS_Store
+Thumbs.db
