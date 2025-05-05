@@ -1,63 +1,77 @@
-import os
 from PIL import Image
-import torch
-from torchvision import transforms
+import os
+import numpy as np
+from tqdm import tqdm
+import json
 from transformers import CLIPProcessor, CLIPModel
 from annoy import AnnoyIndex
-import pickle
+import torch
 
-#Bounding Box Positionen für Teile (x1, y1, x2, y2) im Verhältnis zum Bild
-PARTS = {
-    "laces": (0.25, 0.25, 0.85, 0.45),  
-    "sole": (0.05, 0.85, 0.95, 0.98),   
-}
+# Set Pfade
+IMAGE_DIR = "your_image_folder"
+SOLE_INDEX_PATH = "sole_index.ann"
+LACES_INDEX_PATH = "laces_index.ann"
+SOLE_MAP = "sole_mapping.json"
+LACES_MAP = "laces_mapping.json"
 
-IMAGE_DIR = "shoes"
-EMBEDDINGS_DIR = "part_embeddings"
-os.makedirs(EMBEDDINGS_DIR, exist_ok=True)
+# Modell laden
+model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
+processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
+model.eval()
 
-#Lade CLIP
-device = "cuda" if torch.cuda.is_available() else "cpu"
-model = CLIPModel.from_pretrained("patrickjohncyh/fashion-clip").to(device)
-processor = CLIPProcessor.from_pretrained("patrickjohncyh/fashion-clip")
+# Indexe vorbereiten
+EMBED_DIM = 512 + 3  # Embedding + Farbe (RGB)
+sole_index = AnnoyIndex(EMBED_DIM, "angular")
+laces_index = AnnoyIndex(EMBED_DIM, "angular")
+sole_map = {}
+laces_map = {}
 
-transform = transforms.Compose([
-    transforms.Resize((224, 224)),
-    transforms.ToTensor(),
-])
+# Bounding Box Definitionen
+def get_boxes(w, h):
+    return {
+        "sole": (int(w * 0.05), int(h * 0.82), int(w * 0.95), int(h * 0.97)),
+        "laces": (int(w * 0.25), int(h * 0.3), int(w * 0.75), int(h * 0.5))
+    }
 
-#Für jeden Teil einen Annoy-Index bauen
-part_indexes = {}
-part_id_map = {}
+# Alle Bilder durchgehen
+for idx, file in enumerate(tqdm(sorted(os.listdir(IMAGE_DIR)))):
+    if not file.lower().endswith(".png"):
+        continue
+    try:
+        img_path = os.path.join(IMAGE_DIR, file)
+        img = Image.open(img_path).convert("RGB")
+        w, h = img.size
+        boxes = get_boxes(w, h)
 
-for part, box in PARTS.items():
-    index = AnnoyIndex(512, "angular")
-    id_map = {}
-    idx = 0
+        for part, box in boxes.items():
+            crop = img.crop(box)
+            avg_color = np.array(crop).mean(axis=(0, 1)) / 255.0
 
-    for fname in os.listdir(IMAGE_DIR):
-        if not fname.lower().endswith((".jpg", ".jpeg", ".png")):
-            continue
+            inputs = processor(images=crop, return_tensors="pt")
+            with torch.no_grad():
+                embedding = model.get_image_features(**inputs)
+                embedding = embedding / embedding.norm(p=2, dim=-1, keepdim=True)
 
-        img_path = os.path.join(IMAGE_DIR, fname)
-        image = Image.open(img_path).convert("RGB")
-        w, h = image.size
-        x1, y1, x2, y2 = [int(w * box[i]) if i % 2 == 0 else int(h * box[i]) for i in range(4)]
-        crop = image.crop((x1, y1, x2, y2))
+            combined = np.concatenate([embedding[0].numpy(), avg_color])
+            if part == "sole":
+                sole_index.add_item(idx, combined)
+                sole_map[idx] = file
+            else:
+                laces_index.add_item(idx, combined)
+                laces_map[idx] = file
 
-        inputs = processor(images=crop, return_tensors="pt").to(device)
-        with torch.no_grad():
-            embedding = model.get_image_features(**inputs)
-            embedding = embedding.cpu().numpy()[0]
-        
-        index.add_item(idx, embedding)
-        id_map[idx] = fname
-        idx += 1
+    except Exception as e:
+        print(f"Fehler bei {file}: {e}")
 
-    index.build(10)
-    index.save(f"{EMBEDDINGS_DIR}/{part}.ann")
-    with open(f"{EMBEDDINGS_DIR}/{part}_map.pkl", "wb") as f:
-        pickle.dump(id_map, f)
+# Indexe speichern
+sole_index.build(10)
+laces_index.build(10)
+sole_index.save(SOLE_INDEX_PATH)
+laces_index.save(LACES_INDEX_PATH)
 
-    print(f"{part} index fertig mit {idx} Bildern.")
+with open(SOLE_MAP, "w") as f:
+    json.dump(sole_map, f)
+with open(LACES_MAP, "w") as f:
+    json.dump(laces_map, f)
 
+print("✅ Indexe fertig.")
