@@ -12,10 +12,10 @@ import matplotlib.pyplot as plt
 IMAGE_DIR = "/Users/annesoballa/Documents/semester4/blangblang/tinder-for-sneakers/tinder-for-sneakers/shoes"
 
 # Pfad zum Abfragebild (relativ zu Projekt-Root)
-EXAMPLE_IMAGE = "shoes/B25R11-U19S06L42-MIN.png"
+EXAMPLE_IMAGE = "shoes/B25R11-U21S01L40-MIN.png"
 
 # Welchen Teil vergleichen? "sole" oder "laces"
-PART = "sole"
+PART = "laces"
 
 # Gewicht für die Farbinformation (muss zum Index passen)
 COLOR_WEIGHT = 50.0
