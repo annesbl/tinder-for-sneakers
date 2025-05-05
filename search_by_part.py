@@ -12,13 +12,13 @@ import matplotlib.pyplot as plt
 IMAGE_DIR = "/Users/annesoballa/Documents/semester4/blangblang/tinder-for-sneakers/tinder-for-sneakers/shoes"
 
 # Pfad zum Abfragebild (relativ zu Projekt-Root)
-EXAMPLE_IMAGE = "shoes/B25R11-U18S13L43-MIN.png"
+EXAMPLE_IMAGE = "shoes/B25R11-U19S06L42-MIN.png"
 
 # Welchen Teil vergleichen? "sole" oder "laces"
 PART = "sole"
 
 # Gewicht für die Farbinformation (muss zum Index passen)
-COLOR_WEIGHT = 10.0
+COLOR_WEIGHT = 50.0
 
 # Anzahl der vorgeschlagenen ähnlichen Bilder
 TOP_K = 5
@@ -32,9 +32,19 @@ LACES_MAP = "laces_mapping.json"
 # ==== Bounding-Box-Funktion ====
 def get_box(part, w, h):
     if part == "sole":
-        return (int(w * 0.05), int(h * 0.82), int(w * 0.95), int(h * 0.97))
+        return (
+            int((0.3 - 0.50/2) * w),  # x1 = cx - w/2
+            int((0.76 - 0.10/2) * h), # y1 = cy - h/2
+            int((0.3 + 0.50/2) * w),  # x2 = cx + w/2
+            int((0.76 + 0.10/2) * h)  # y2 = cy + h/2
+        )
     else:  # "laces"
-        return (int(w * 0.25), int(h * 0.3), int(w * 0.75), int(h * 0.5))
+        return (
+            int((0.6 - 0.5/2) * w),
+            int((0.5 - 0.17/2) * h),
+            int((0.6 + 0.5/2) * w),
+            int((0.5 + 0.17/2) * h)
+        )
 
 # ==== CLIP-Modell laden ====
 model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")

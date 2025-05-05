@@ -7,7 +7,7 @@ from transformers import CLIPProcessor, CLIPModel
 from annoy import AnnoyIndex
 import torch
 
-COLOR_WEIGHT = 10.0
+COLOR_WEIGHT = 50.0
 
 # Set Pfade
 IMAGE_DIR = "/Users/annesoballa/Documents/semester4/blangblang/tinder-for-sneakers/tinder-for-sneakers/shoes"
@@ -31,9 +31,20 @@ laces_map = {}
 # Bounding Box Definitionen
 def get_boxes(w, h):
     return {
-        "sole": (int(w * 0.05), int(h * 0.82), int(w * 0.95), int(h * 0.97)),
-        "laces": (int(w * 0.25), int(h * 0.3), int(w * 0.75), int(h * 0.5))
+        "sole": (
+            int((0.3 - 0.50/2) * w),  # x1 = cx - w/2
+            int((0.76 - 0.10/2) * h), # y1 = cy - h/2
+            int((0.3 + 0.50/2) * w),  # x2 = cx + w/2
+            int((0.76 + 0.10/2) * h)  # y2 = cy + h/2
+        ),
+        "laces": (
+            int((0.6 - 0.5/2) * w),
+            int((0.5 - 0.17/2) * h),
+            int((0.6 + 0.5/2) * w),
+            int((0.5 + 0.17/2) * h)
+        )
     }
+
 
 # Alle Bilder durchgehen
 for idx, file in enumerate(tqdm(sorted(os.listdir(IMAGE_DIR)))):
