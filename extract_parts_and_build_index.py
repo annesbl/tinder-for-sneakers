@@ -7,8 +7,10 @@ from transformers import CLIPProcessor, CLIPModel
 from annoy import AnnoyIndex
 import torch
 
+COLOR_WEIGHT = 10.0
+
 # Set Pfade
-IMAGE_DIR = "your_image_folder"
+IMAGE_DIR = "/Users/annesoballa/Documents/semester4/blangblang/tinder-for-sneakers/tinder-for-sneakers/shoes"
 SOLE_INDEX_PATH = "sole_index.ann"
 LACES_INDEX_PATH = "laces_index.ann"
 SOLE_MAP = "sole_mapping.json"
@@ -52,7 +54,9 @@ for idx, file in enumerate(tqdm(sorted(os.listdir(IMAGE_DIR)))):
                 embedding = model.get_image_features(**inputs)
                 embedding = embedding / embedding.norm(p=2, dim=-1, keepdim=True)
 
-            combined = np.concatenate([embedding[0].numpy(), avg_color])
+            
+            combined = np.concatenate([embedding[0].numpy(), avg_color * COLOR_WEIGHT])
+
             if part == "sole":
                 sole_index.add_item(idx, combined)
                 sole_map[idx] = file
