@@ -24,8 +24,10 @@ COLOR_WEIGHT = 50.0
 TOP_K = 5
 
 # Pfade zu den erzeugten Index- und Mapping-Dateien
+COLOR_INDEX_PATH = "color_index.ann"
 SOLE_INDEX_PATH = "sole_index.ann"
 LACES_INDEX_PATH = "laces_index.ann"
+COLOR_MAP = "color_mapping.json"
 SOLE_MAP = "sole_mapping.json"
 LACES_MAP = "laces_mapping.json"
 
@@ -33,18 +35,25 @@ LACES_MAP = "laces_mapping.json"
 def get_box(part, w, h):
     if part == "sole":
         return (
-            int((0.3 - 0.50/2) * w),  # x1 = cx - w/2
-            int((0.76 - 0.10/2) * h), # y1 = cy - h/2
-            int((0.3 + 0.50/2) * w),  # x2 = cx + w/2
-            int((0.76 + 0.10/2) * h)  # y2 = cy + h/2
+            int((0.3 - 0.06/2) * w),  # x1 = cx - w_/2
+            int((0.76 - 0.5/2) * h),  # y1 = cy - h_/2
+            int((0.3 + 0.06/2) * w),  # x2 = cx + w_/2
+            int((0.76 + 0.5/2) * h)   # y2 = cy + h_/2
         )
-    else:  # "laces"
+    elif part == "laces":  # "laces"
         return (
-            int((0.6 - 0.5/2) * w),
-            int((0.5 - 0.17/2) * h),
-            int((0.6 + 0.5/2) * w),
-            int((0.5 + 0.17/2) * h)
+            int((0.57 - 0.01/2) * w),
+            int((0.48 - 0.04/2) * h),
+            int((0.57 + 0.01/2) * w),
+            int((0.48 + 0.04/2) * h)
         )
+    elif part == "color":
+        return (int((0.3 - 0.1/2) * w),
+            int((0.5 - 0.2/2) * h),
+            int((0.3 + 0.1/2) * w),
+            int((0.5 + 0.2/2) * h)
+    )
+
 
 # ==== CLIP-Modell laden ====
 model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
@@ -76,9 +85,12 @@ query_vec = np.concatenate([embedding[0].cpu().numpy(), avg_color * COLOR_WEIGHT
 if PART == "sole":
     index_file = SOLE_INDEX_PATH
     map_file   = SOLE_MAP
-else:
+elif PART == "laces":
     index_file = LACES_INDEX_PATH
     map_file   = LACES_MAP
+elif PART == "color":
+    index_file = COLOR_INDEX_PATH
+    map_file   = COLOR_MAP
 
 # Index laden
 dim = query_vec.shape[0]
