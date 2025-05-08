@@ -36,27 +36,25 @@ laces_map = {}
 def get_boxes(w, h):
     return {
         "sole": (
-            int((0.3 - 0.06/2) * w),  # x1 = cx - w_rel/2
-            int((0.76 - 0.5/2) * h),  # y1 = cy - h_rel/2
-            int((0.3 + 0.06/2) * w),  # x2 = cx + w_rel/2
-            int((0.76 + 0.5/2) * h)   # y2 = cy + h_rel/2
-    ),
-
+            int((0.3 - 0.06/2) * w),
+            int((0.76 - 0.5/2) * h),
+            int((0.3 + 0.06/2) * w),
+            int((0.76 + 0.5/2) * h)
+        ),
         "laces": (
             int((0.57 - 0.01/2) * w),
             int((0.48 - 0.04/2) * h),
             int((0.57 + 0.01/2) * w),
             int((0.48 + 0.04/2) * h)
-    ),
-
+        ),
         "color": (
             int((0.3 - 0.1/2) * w),
             int((0.5 - 0.2/2) * h),
             int((0.3 + 0.1/2) * w),
             int((0.5 + 0.2/2) * h)
-    )
-
+        )
     }
+
 
 
 # Alle Bilder durchgehen

@@ -9,13 +9,13 @@ import matplotlib.pyplot as plt
 
 # ==== Einstellungen ====
 # Relativer Ordner mit deinen Schuhbildern
-IMAGE_DIR = "/Users/annesoballa/Documents/semester4/blangblang/tinder-for-sneakers/tinder-for-sneakers/shoes"
+IMAGE_DIR = "/Users/annesoballa/Documents/semester4/blangblang/tinder-for-sneakers-1/shoes/"
 
 # Pfad zum Abfragebild (relativ zu Projekt-Root)
-EXAMPLE_IMAGE = "shoes/B25R11-U19S06L42-MIN.png"
+EXAMPLE_IMAGE = "B25R11-U21S06L40-MIN.png"
 
-# Welchen Teil vergleichen? "sole" oder "laces"
-PART = "sole"
+# Welchen Teil vergleichen? "sole" oder "laces" oder "color"
+PART = "color"
 
 # Gewicht für die Farbinformation (muss zum Index passen)
 COLOR_WEIGHT = 50.0
@@ -39,14 +39,14 @@ def get_box(part, w, h):
             int((0.76 - 0.5/2) * h),  # y1 = cy - h_/2
             int((0.3 + 0.06/2) * w),  # x2 = cx + w_/2
             int((0.76 + 0.5/2) * h)   # y2 = cy + h_/2
-        )
+        ),
     elif part == "laces":  # "laces"
         return (
             int((0.57 - 0.01/2) * w),
             int((0.48 - 0.04/2) * h),
             int((0.57 + 0.01/2) * w),
             int((0.48 + 0.04/2) * h)
-        )
+        ),
     elif part == "color":
         return (int((0.3 - 0.1/2) * w),
             int((0.5 - 0.2/2) * h),
