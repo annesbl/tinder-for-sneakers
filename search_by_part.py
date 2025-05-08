@@ -6,16 +6,18 @@ from transformers import CLIPProcessor, CLIPModel
 from annoy import AnnoyIndex
 import torch
 import matplotlib.pyplot as plt
+import math
+from PIL import ImageDraw
 
 # ==== Einstellungen ====
 # Relativer Ordner mit deinen Schuhbildern
 IMAGE_DIR = "/Users/annesoballa/Documents/semester4/blangblang/tinder-for-sneakers-1/shoes/"
 
 # Pfad zum Abfragebild (relativ zu Projekt-Root)
-EXAMPLE_IMAGE = os.path.join(IMAGE_DIR, "B25R11-U21S01L40-MIN.png")
+EXAMPLE_IMAGE = os.path.join(IMAGE_DIR, "B25R11-U18S13L43-MIN.png")
 
 # Welchen Teil vergleichen? "sole" oder "laces" oder "color"
-PART = "laces"
+PART = "sole"
 
 # Gewicht für die Farbinformation (muss zum Index passen)
 COLOR_WEIGHT = 50.0
@@ -53,19 +55,45 @@ PARTS = {
     }
 }
 
+def rotate_point(x, y, angle, cx, cy):
+    """Rotiert einen Punkt (x, y) um (cx, cy) mit dem angegebenen Winkel (in Grad)."""
+    rad = math.radians(angle)
+    cos_a = math.cos(rad)
+    sin_a = math.sin(rad)
+    x_rot = cos_a * (x - cx) - sin_a * (y - cy) + cx
+    y_rot = sin_a * (x - cx) + cos_a * (y - cy) + cy
+    return x_rot, y_rot
+
+
 def get_box(part, w, h):
     try:
         cfg = PARTS[part]
         cx, cy = cfg["rel_center"]
         rw, rh = cfg["rel_size"]
+        angle = cfg["angle"]
         x1 = int((cx - rw / 2) * w)
         y1 = int((cy - rh / 2) * h)
         x2 = int((cx + rw / 2) * w)
         y2 = int((cy + rh / 2) * h)
-        return (x1, y1, x2, y2)
+        box_center = ((x1 + x2) / 2, (y1 + y2) / 2)
+        
+        # Punkte der Box vor der Rotation
+        box_points = [(x1, y1), (x1, y2), (x2, y1), (x2, y2)]
+        
+        # Alle Punkte der Box rotieren
+        rotated_points = [rotate_point(x, y, angle, box_center[0], box_center[1]) for x, y in box_points]
+        
+        # Bestimme die neue (rotierte) Box
+        min_x = min([p[0] for p in rotated_points])
+        min_y = min([p[1] for p in rotated_points])
+        max_x = max([p[0] for p in rotated_points])
+        max_y = max([p[1] for p in rotated_points])
+        
+        # Rückgabe der neuen Box-Koordinaten
+        return (int(min_x), int(min_y), int(max_x), int(max_y))
+    
     except KeyError:
         raise ValueError(f"Unbekannter Part: '{part}'. Verfügbare Teile: {list(PARTS.keys())}")
-
 
 # ==== CLIP-Modell laden ====
 model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")

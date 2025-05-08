@@ -6,6 +6,8 @@ import json
 from transformers import CLIPProcessor, CLIPModel
 from annoy import AnnoyIndex
 import torch
+import math
+from PIL import ImageDraw
 
 COLOR_WEIGHT = 50.0
 
@@ -54,17 +56,50 @@ PARTS = {
     }
 }
 
-def get_boxes(w, h):
-    boxes = {}
-    for part, cfg in PARTS.items():
+def rotate_point(x, y, angle, cx, cy):
+    """Rotiert einen Punkt (x, y) um (cx, cy) mit dem angegebenen Winkel (in Grad)."""
+    rad = math.radians(angle)
+    cos_a = math.cos(rad)
+    sin_a = math.sin(rad)
+    x_rot = cos_a * (x - cx) - sin_a * (y - cy) + cx
+    y_rot = sin_a * (x - cx) + cos_a * (y - cy) + cy
+    return x_rot, y_rot
+
+
+def get_boxes(part, w, h):
+    try:
+        cfg = PARTS[part]
         cx, cy = cfg["rel_center"]
         rw, rh = cfg["rel_size"]
-        x1 = int((cx - rw / 2) * w)
-        y1 = int((cy - rh / 2) * h)
-        x2 = int((cx + rw / 2) * w)
-        y2 = int((cy + rh / 2) * h)
-        boxes[part] = (x1, y1, x2, y2)
-    return boxes
+        angle = cfg["angle"]
+        
+        # Berechne die ursprünglichen, ungeflippten Koordinaten
+        x1 = (cx - rw / 2) * w
+        y1 = (cy - rh / 2) * h
+        x2 = (cx + rw / 2) * w
+        y2 = (cy + rh / 2) * h
+        
+        # Mittelpunkte der Box (für Rotation)
+        box_center = ((x1 + x2) / 2, (y1 + y2) / 2)
+        
+        # Punkte der Box vor der Rotation
+        box_points = [(x1, y1), (x1, y2), (x2, y1), (x2, y2)]
+        
+        # Alle Punkte der Box rotieren
+        rotated_points = [rotate_point(x, y, angle, box_center[0], box_center[1]) for x, y in box_points]
+        
+        # Bestimme die neue (rotierte) Box
+        min_x = min([p[0] for p in rotated_points])
+        min_y = min([p[1] for p in rotated_points])
+        max_x = max([p[0] for p in rotated_points])
+        max_y = max([p[1] for p in rotated_points])
+        
+        # Rückgabe der neuen Box-Koordinaten
+        return (int(min_x), int(min_y), int(max_x), int(max_y))
+    
+    except KeyError:
+        raise ValueError(f"Unbekannter Part: '{part}'. Verfügbare Teile: {list(PARTS.keys())}")
+
 
 
 
@@ -77,20 +112,25 @@ for idx, file in enumerate(tqdm(sorted(os.listdir(IMAGE_DIR)))):
         img_path = os.path.join(IMAGE_DIR, file)
         img = Image.open(img_path).convert("RGB")
         w, h = img.size
-        boxes = get_boxes(w, h)
 
-        for part, box in boxes.items():
+        # Durch alle Teile iterieren und Boxen berechnen
+        for part in PARTS:
+            # Holen der Box für jedes Teil
+            box = get_boxes(part, w, h)
+
             crop = img.crop(box)
             avg_color = np.array(crop).mean(axis=(0, 1)) / 255.0
 
+            # Verarbeitung mit dem Modell
             inputs = processor(images=crop, return_tensors="pt")
             with torch.no_grad():
                 embedding = model.get_image_features(**inputs)
                 embedding = embedding / embedding.norm(p=2, dim=-1, keepdim=True)
 
-            
+            # Kombinieren der Embeddings und Farbwerte
             combined = np.concatenate([embedding[0].numpy(), avg_color * COLOR_WEIGHT])
 
+            # Je nach Teil, zum entsprechenden Index hinzufügen
             if part == "sole":
                 sole_index.add_item(idx, combined)
                 sole_map[idx] = file
@@ -112,6 +152,7 @@ color_index.save(COLOR_INDEX_PATH)
 sole_index.save(SOLE_INDEX_PATH)
 laces_index.save(LACES_INDEX_PATH)
 
+# Mappen speichern
 with open(COLOR_MAP, "w") as f:
     json.dump(color_map, f)
 with open(SOLE_MAP, "w") as f:
