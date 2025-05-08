@@ -11,8 +11,10 @@ COLOR_WEIGHT = 50.0
 
 # Set Pfade
 IMAGE_DIR = "/Users/annesoballa/Documents/semester4/blangblang/tinder-for-sneakers/tinder-for-sneakers/shoes"
+COLOR_INDEX_PATH = "color_index.ann"
 SOLE_INDEX_PATH = "sole_index.ann"
 LACES_INDEX_PATH = "laces_index.ann"
+COLOR_MAP = "color_mapping.json"
 SOLE_MAP = "sole_mapping.json"
 LACES_MAP = "laces_mapping.json"
 
@@ -23,8 +25,10 @@ model.eval()
 
 # Indexe vorbereiten
 EMBED_DIM = 512 + 3  # Embedding + Farbe (RGB)
+color_index = AnnoyIndex(EMBED_DIM, "angular")
 sole_index = AnnoyIndex(EMBED_DIM, "angular")
 laces_index = AnnoyIndex(EMBED_DIM, "angular")
+color_map = {}
 sole_map = {}
 laces_map = {}
 
@@ -32,17 +36,26 @@ laces_map = {}
 def get_boxes(w, h):
     return {
         "sole": (
-            int((0.3 - 0.50/2) * w),  # x1 = cx - w/2
-            int((0.76 - 0.10/2) * h), # y1 = cy - h/2
-            int((0.3 + 0.50/2) * w),  # x2 = cx + w/2
-            int((0.76 + 0.10/2) * h)  # y2 = cy + h/2
-        ),
+            int((0.3 - 0.06/2) * w),  # x1 = cx - w_rel/2
+            int((0.76 - 0.5/2) * h),  # y1 = cy - h_rel/2
+            int((0.3 + 0.06/2) * w),  # x2 = cx + w_rel/2
+            int((0.76 + 0.5/2) * h)   # y2 = cy + h_rel/2
+    ),
+
         "laces": (
-            int((0.6 - 0.5/2) * w),
-            int((0.5 - 0.17/2) * h),
-            int((0.6 + 0.5/2) * w),
-            int((0.5 + 0.17/2) * h)
-        )
+            int((0.57 - 0.01/2) * w),
+            int((0.48 - 0.04/2) * h),
+            int((0.57 + 0.01/2) * w),
+            int((0.48 + 0.04/2) * h)
+    ),
+
+        "color": (
+            int((0.3 - 0.1/2) * w),
+            int((0.5 - 0.2/2) * h),
+            int((0.3 + 0.1/2) * w),
+            int((0.5 + 0.2/2) * h)
+    )
+
     }
 
 
@@ -71,19 +84,26 @@ for idx, file in enumerate(tqdm(sorted(os.listdir(IMAGE_DIR)))):
             if part == "sole":
                 sole_index.add_item(idx, combined)
                 sole_map[idx] = file
-            else:
+            elif part == "laces":
                 laces_index.add_item(idx, combined)
                 laces_map[idx] = file
+            elif part == "color":
+                color_index.add_item(idx, combined)
+                color_map[idx] = file
 
     except Exception as e:
         print(f"Fehler bei {file}: {e}")
 
 # Indexe speichern
+color_index.build(10)
 sole_index.build(10)
 laces_index.build(10)
+color_index.save(COLOR_INDEX_PATH)
 sole_index.save(SOLE_INDEX_PATH)
 laces_index.save(LACES_INDEX_PATH)
 
+with open(COLOR_MAP, "w") as f:
+    json.dump(color_map, f)
 with open(SOLE_MAP, "w") as f:
     json.dump(sole_map, f)
 with open(LACES_MAP, "w") as f:
