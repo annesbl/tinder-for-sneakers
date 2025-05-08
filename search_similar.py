@@ -7,9 +7,9 @@ from annoy import AnnoyIndex
 import matplotlib.pyplot as plt
 
 # Config
-query_path = "query/test_shoe1.jpg"  # Set to None or "" to skip image
-text_prompt = "white sneaker with thick sole"  # Set to "" to skip text
-alpha = 0.5  # Weight: 1.0 = only image, 0.0 = only text, 0.5 = mix
+query_path = "query/test_shoe2.jpg"  # Set to None or "" to skip image
+text_prompt = ""  # Set to "" to skip text
+alpha = 1.0  # Weight: 1.0 = only image, 0.0 = only text, 0.5 = mix
 top_k = 5
 image_dir = "shoes"
 
@@ -61,13 +61,17 @@ id_to_filename = np.load("id_to_filename.npy", allow_pickle=True)
 indices = index.get_nns_by_vector(combined, top_k)
 
 # Display results
-fig, axs = plt.subplots(1, top_k, figsize=(15, 5))
+fig, axs = plt.subplots(1, top_k+1, figsize=(15, 5))
 for i, idx in enumerate(indices):
     img_path = os.path.join(image_dir, id_to_filename[idx])
     img = Image.open(img_path)
-    axs[i].imshow(img)
-    axs[i].axis("off")
-    axs[i].set_title(f"Result {i+1}")
+    axs[i+1].imshow(img)
+    axs[i+1].axis("off")
+    axs[i+1].set_title(f"Result {i+1}")
+img=Image.open(query_path)
+axs[0].imshow(img)
+axs[0].axis("off")
+axs[0].set_title("Input")
 query_type = "Image + Text" if image_embedding is not None and text_embedding is not None else "Text" if image_embedding is None else "Image"
 plt.suptitle(f"FashionCLIP Search ({query_type})", fontsize=14)
 plt.tight_layout()
