@@ -12,10 +12,10 @@ import matplotlib.pyplot as plt
 IMAGE_DIR = "/Users/annesoballa/Documents/semester4/blangblang/tinder-for-sneakers-1/shoes/"
 
 # Pfad zum Abfragebild (relativ zu Projekt-Root)
-EXAMPLE_IMAGE = "B25R11-U21S06L40-MIN.png"
+EXAMPLE_IMAGE = os.path.join(IMAGE_DIR, "B25R11-U21S01L40-MIN.png")
 
 # Welchen Teil vergleichen? "sole" oder "laces" oder "color"
-PART = "color"
+PART = "laces"
 
 # Gewicht für die Farbinformation (muss zum Index passen)
 COLOR_WEIGHT = 50.0
@@ -32,27 +32,39 @@ SOLE_MAP = "sole_mapping.json"
 LACES_MAP = "laces_mapping.json"
 
 # ==== Bounding-Box-Funktion ====
+PARTS = {
+    "sole": {
+        "rel_center": (0.3, 0.76),
+        "rel_size":   (0.06, 0.5),
+        "angle":      92,
+        "color":      "red"
+    },
+    "laces": {
+        "rel_center": (0.57, 0.48),
+        "rel_size":   (0.01, 0.04),
+        "angle":      0,
+        "color":      "green"
+    },
+    "color": {
+        "rel_center": (0.3, 0.5),
+        "rel_size":   (0.1, 0.2),
+        "angle":      0,
+        "color":      "orange"
+    }
+}
+
 def get_box(part, w, h):
-    if part == "sole":
-        return (
-            int((0.3 - 0.06/2) * w),  # x1 = cx - w_/2
-            int((0.76 - 0.5/2) * h),  # y1 = cy - h_/2
-            int((0.3 + 0.06/2) * w),  # x2 = cx + w_/2
-            int((0.76 + 0.5/2) * h)   # y2 = cy + h_/2
-        ),
-    elif part == "laces":  # "laces"
-        return (
-            int((0.57 - 0.01/2) * w),
-            int((0.48 - 0.04/2) * h),
-            int((0.57 + 0.01/2) * w),
-            int((0.48 + 0.04/2) * h)
-        ),
-    elif part == "color":
-        return (int((0.3 - 0.1/2) * w),
-            int((0.5 - 0.2/2) * h),
-            int((0.3 + 0.1/2) * w),
-            int((0.5 + 0.2/2) * h)
-    )
+    try:
+        cfg = PARTS[part]
+        cx, cy = cfg["rel_center"]
+        rw, rh = cfg["rel_size"]
+        x1 = int((cx - rw / 2) * w)
+        y1 = int((cy - rh / 2) * h)
+        x2 = int((cx + rw / 2) * w)
+        y2 = int((cy + rh / 2) * h)
+        return (x1, y1, x2, y2)
+    except KeyError:
+        raise ValueError(f"Unbekannter Part: '{part}'. Verfügbare Teile: {list(PARTS.keys())}")
 
 
 # ==== CLIP-Modell laden ====
