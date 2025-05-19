@@ -1,0 +1,10 @@
+# Python Environments
+.env
+*.env
+.venv/
+venv/
+env/
+
+# System-Dateien
+.DS_Store
+Thumbs.db
