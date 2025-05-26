@@ -1,0 +1,5 @@
+echo "*.pt" >> .gitignore
+echo "runs/" >> .gitignore
+echo "__pycache__/" >> .gitignore
+echo "*.png" >> .gitignore
+echo "*.jpg" >> .gitignore
