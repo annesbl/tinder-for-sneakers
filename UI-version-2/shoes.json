@@ -1,0 +1,60 @@
+[
+    {
+      "name": "Flamingo Fire",
+      "description": "Der Flamingo Fire ist kein Schuh – er ist ein Statement. Mit leuchtendem Pink und Mango-Gelb bringt er Farbe in deinen Alltag.",
+      "image": "Shoes/flamingo.png",
+      "light": "#ffe3eb",
+      "strong": "#ea638c"
+    },
+    {
+      "name": "Deep Blue Dash",
+      "description": "So cool, dass selbst der Ozean neidisch ist. Atmungsaktives Mesh, Retro-Sohle und maritimer Style für deinen Alltag.",
+      "image": "Shoes/deepblue.png",
+      "light": "#e1e9ff",
+      "strong": "#023e8a"
+    },
+    {
+      "name": "Mango Mudslide",
+      "description": "Frisch, frech, fruchtig – Mango trifft Moos. Ein Schuh wie ein Spätsommertag auf Asphalt.",
+      "image": "Shoes/mango.png",
+      "light": "#fff6cc",
+      "strong": "#8c9b5a"
+    },
+    {
+      "name": "Midnight Coral",
+      "description": "Der stilvolle Mix aus Tiefe und Farbe. Marineblau trifft Koralle – ideal für urbane Nächte.",
+      "image": "Shoes/midnight.png",
+      "light": "#dbe3f2",
+      "strong": "#e94d50"
+    },
+    {
+      "name": "Shadow Whisper",
+      "description": "Der schwarze Anzug unter den Sneakern. Samtmatte Oberfläche, flache Silhouette, absolute Eleganz.",
+      "image": "Shoes/shadow.png",
+      "light": "#eeeeee",
+      "strong": "#1a1a1a"
+    },
+    {
+      "name": "Urban Roast",
+      "description": "Die perfekte Fusion aus City-Style und Kaffeekultur. Urban Roast vereint warmes Braun mit einer kräftigen Sohle in tiefem Blau – gemacht für deinen täglichen Grind.",
+      "image": "Shoes/urban.png",
+      "light": "#ede2d6",
+      "strong": "#014b6a"
+    },
+    {
+      "name": "Noir Pulse",
+      "description": "Schwarz. Elegant. Unverkennbar. Der Noir Pulse ist dein Statement für Understatement – mit HighTop-Silhouette und cleanem Look.",
+      "image": "Shoes/NoirPulse.png",
+      "light": "#d9d9d9",
+      "strong": "#121212"
+    },
+    {
+      "name": "Rustic Rebel",
+      "description": "Rebellisch. Rustikal. Der Rustic Rebel bringt kernigen Style und Komfort in deinen Alltag – für Abenteuer in jeder Gasse.",
+      "image": "Shoes/Rustic.png",
+      "light": "#f2dfc1",
+      "strong": "#4b2e1a"
+    }
+  ]
+  
+  
