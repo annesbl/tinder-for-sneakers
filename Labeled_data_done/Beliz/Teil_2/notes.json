@@ -1,0 +1,25 @@
+{
+  "categories": [
+    {
+      "id": 0,
+      "name": "Farbe"
+    },
+    {
+      "id": 1,
+      "name": "Schn\u00fcrsenkel"
+    },
+    {
+      "id": 2,
+      "name": "Sohle"
+    },
+    {
+      "id": 3,
+      "name": "ganzer_schuh"
+    }
+  ],
+  "info": {
+    "year": 2025,
+    "version": "1.0",
+    "contributor": "Label Studio"
+  }
+}
