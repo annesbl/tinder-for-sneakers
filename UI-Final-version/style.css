@@ -39,7 +39,13 @@ header {
 .icon-right {
   font-size: 30px; 
   line-height: 1;
-  padding: 0 30px;
+  padding: 0 40px;
+}
+
+.icon-img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
 }
 
 .header-title {
@@ -142,5 +148,36 @@ header {
   font-size: 13px;
   color: white;
   line-height: 1.4;
+}
+
+.like-button {
+  position: absolute;
+  z-index: 4;
+  cursor: pointer;
+}
+
+.heart-img {
+  width: 36px;
+  height: 36px;
+  transition: filter 0.2s ease;
+}
+
+.Sohle {
+  bottom: 370px;
+  left: 120px;
+}
+
+.Farbe {
+  top: 250px;
+  left: 47px;
+}
+
+.Schnürsenkel {
+  bottom: 550px;
+  right: 75px;
+}
+
+.heart-img.liked {
+  content: url("icons/heart-red.png");
 }
 
