@@ -35,17 +35,28 @@ header {
   z-index: 9999;
 }
 
+.icon-img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
 .icon-left,
 .icon-right {
-  font-size: 30px; 
+  font-size: 30px;
   line-height: 1;
   padding: 0 40px;
 }
 
-.icon-img {
+.bookmark-img {
   width: 24px;
   height: 24px;
-  object-fit: contain;
+  cursor: pointer;
+  z-index: 9999;
+  pointer-events: auto;
+}
+  .bookmark-img.marked {
+  content: url("icons/bookmark_filled.png");
 }
 
 .header-title {
