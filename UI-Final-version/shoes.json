@@ -3,7 +3,7 @@
       "id": 1,
       "name": "Flamingo Fire",
       "description": "Der Flamingo Fire ist kein Schuh – er ist ein Statement. Mit leuchtendem Pink und Mango-Gelb bringt er Farbe in deinen Alltag.",
-      "image": "Shoes/flamingo.png",
+      "image": "static/Shoes/flamingo.png",
       "light": "#ffe3eb",
       "strong": "#ea638c"
     },
