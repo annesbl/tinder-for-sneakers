@@ -8,3 +8,13 @@ env/
 # System-Dateien
 .DS_Store
 Thumbs.db
+
+# SQLite-Datenbank
+*.db
+*.sqlite3
+
+# Bytecode und Caches
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
