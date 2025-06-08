@@ -6,14 +6,15 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import json, random
 from pathlib import Path
-from init_db import init_db
-
-# Starte DB-Erstellung
-init_db()
-
+class FeedbackVector(BaseModel):
+    sohle: int
+    farbe: int
+    schnuersenkel: int
+    mehr: int
+    id: int | None = None  # Schuh-ID, optional
 app = FastAPI()
 
-# CORS – nur wenn du JS nutzt, das mit API spricht
+# CORS – nur für Entwicklung nötig, wenn du Frontend und Backend getrennt startest
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -27,17 +28,18 @@ BASE_DIR = Path(__file__).resolve().parent
 app.mount("/static", StaticFiles(directory=BASE_DIR / "static"), name="static")
 
 # ➕ HTML-Templates
-templates = Jinja2Templates(directory="/templates")
+templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
 
 # 🔁 JSON-Daten laden
-#def load_shoes():
-#    try:
-#        with open("shoes.json", "r", encoding="utf-8") as f:
-#            return json.load(f)
-#    except:
-#        return []
+def load_shoes():
+    try:
+        with open(BASE_DIR / "shoes.json", "r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception as e:
+        print("Fehler beim Laden von shoes.json:", e)
+        return []
 
-#shoes_data = load_shoes()
+shoes_data = load_shoes()
 
 # 🏠 Startseite mit HTML
 @app.get("/", response_class=HTMLResponse)
@@ -52,15 +54,27 @@ class FeedbackVector(BaseModel):
     mehr: int
     bookmark: int
 
-@app.post("/recommend")
-def recommend(vector: FeedbackVector):
-    print("Feedback:", vector.dict())
-    if not shoes_data:
-        return {"error": "Keine Schuhe"}
-    recommended_id = random.choice([s["id"] for s in shoes_data])
-    return {"recommendedId": recommended_id}
-
 @app.get("/shoe/{shoe_id}")
 def get_shoe(shoe_id: int):
     shoe = next((s for s in shoes_data if s["id"] == shoe_id), None)
     return shoe or {"error": "Nicht gefunden"}
+
+@app.get("/shoes")
+def get_shoes():
+    return shoes_data
+@app.post("/recommend")
+def recommend(vector: FeedbackVector):
+    print("Feedback:", vector.dict())
+    # Zugriff auf die Schuh-ID:
+    shoe_id = vector.id
+    print(f"Feedback gehört zu Schuh-ID: {shoe_id}")
+
+    if not shoes_data:
+        return {"error": "Keine Schuhe"}
+    # Beispiel: Empfehle einen zufälligen Schuh, der NICHT der aktuelle ist
+    possible_ids = [s["id"] for s in shoes_data if s["id"] != shoe_id]
+    if not possible_ids:
+        recommended_id = shoe_id  # Fallback: den aktuellen Schuh zurückgeben
+    else:
+        recommended_id = random.choice(possible_ids)
+    return {"recommendedId": recommended_id}
