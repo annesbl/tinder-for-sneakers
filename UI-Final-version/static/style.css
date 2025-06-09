@@ -149,6 +149,7 @@ header {
   color: rgba(255, 255, 255, 0.6);
   font-size: 15px;
   cursor: pointer;
+  pointer-events: auto;
   padding: 0;
   letter-spacing: 0.3px;
 }
@@ -165,6 +166,7 @@ header {
   position: absolute;
   z-index: 4;
   cursor: pointer;
+  pointer-events: auto;
 }
 
 .heart-img {
