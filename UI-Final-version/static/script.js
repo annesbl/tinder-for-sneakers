@@ -106,7 +106,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const isOpen = desc.style.display === "block";
       desc.style.display = isOpen ? "none" : "block";
       e.target.textContent = isOpen ? "mehr" : "weniger";
-      updateVector("mehr", isOpen ? 0 : 1);
+      if (!isOpen && vector[3] === 0) {
+        updateVector("mehr", 1);
+      }
       return;
     }
   }
