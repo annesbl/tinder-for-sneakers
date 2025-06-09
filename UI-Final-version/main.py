@@ -52,7 +52,14 @@ class FeedbackVector(BaseModel):
     farbe: int
     schnuersenkel: int
     mehr: int
-    bookmark: int
+
+@app.post("/recommend")
+def recommend(vector: FeedbackVector):
+    print("Feedback:", vector.dict())
+    if not shoes_data:
+        return {"error": "Keine Schuhe"}
+    recommended_id = random.choice([s["id"] for s in shoes_data])
+    return {"recommendedId": recommended_id}
 
 @app.get("/shoe/{shoe_id}")
 def get_shoe(shoe_id: int):
