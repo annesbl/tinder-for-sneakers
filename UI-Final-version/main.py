@@ -6,6 +6,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import json, random
 from pathlib import Path
+from init_db import init_db
+
+# Starte DB-Erstellung
+init_db()
+
 class FeedbackVector(BaseModel):
     sohle: int
     farbe: int
