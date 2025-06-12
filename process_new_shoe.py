@@ -6,7 +6,7 @@ and store everything in SQLite database
 import argparse, sqlite3, uuid, json, cv2, numpy as np
 from ultralytics import YOLO
 
-WEIGHTS_FILE  = "yolov8m_sneakers.pt"      #aus training
+WEIGHTS_FILE  = "models/yolov8m_sneakers.pt"      #aus training
 CLASS_MAP     = {0: "Sohle", 1: "Schnuersenkel",
                  2: "Farbe", 3: "ganzer_schuh"}
 TARGET_CLASSES = {0, 1, 2}                 #nur diese wollen wir einfärben
