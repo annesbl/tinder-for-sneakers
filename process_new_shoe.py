@@ -5,6 +5,9 @@ and store everything in SQLite database
 
 import argparse, sqlite3, uuid, json, cv2, numpy as np
 from ultralytics import YOLO
+import torch
+from torchvision import models, transforms
+from PIL import Image
 
 WEIGHTS_FILE  = "models/yolov8m_sneakers.pt"      #aus training
 CLASS_MAP     = {0: "Sohle", 1: "Schnuersenkel",
@@ -16,21 +19,39 @@ def avg_rgb(img):
     b, g, r = img.reshape(-1, 3).mean(axis=0)
     return f"#{int(r):02X}{int(g):02X}{int(b):02X}"
 
-def backbone_feat(model, crop):
-    import torch
-    crop = cv2.resize(crop, (640, 640))[:, :, ::-1]
-    crop = crop.transpose(2, 0, 1)[None] / 255.0
+_resnet = models.resnet50(weights=models.ResNet50_Weights.DEFAULT)
+_resnet = torch.nn.Sequential(*list(_resnet.children())[:-1])  # FC-Schicht weg
+_resnet.eval()
+
+_tf = transforms.Compose([
+    transforms.Resize((224,224)),
+    transforms.ToTensor(),
+    transforms.Normalize(mean=[0.485,0.456,0.406],
+                         std =[0.229,0.224,0.225])
+])
+
+def backbone_feat(_, crop_bgr):
+    img = Image.fromarray(cv2.cvtColor(crop_bgr, cv2.COLOR_BGR2RGB))
+    x   = _tf(img).unsqueeze(0)       # 1×3×224×224
     with torch.no_grad():
-        x = torch.from_numpy(crop.astype(np.float32)).to(model.device)
-        for layer in model.model.model[:-1]:
-            x = layer(x)
-        v = x.mean([2, 3]).cpu().numpy().squeeze()  # 512-D
-    return v.tolist()
+        v = _resnet(x).squeeze()      # 2048-D
+    return v.numpy().tolist()
+
+#def backbone_feat(model, crop):
+ #   import torch
+  #  crop = cv2.resize(crop, (640, 640))[:, :, ::-1]
+   # crop = crop.transpose(2, 0, 1)[None] / 255.0
+    #with torch.no_grad():
+     #   x = torch.from_numpy(crop.astype(np.float32)).to(model.device)
+      #  for layer in model.model.model[:-1]:
+       #     x = layer(x)
+        #v = x.mean([2, 3]).cpu().numpy().squeeze()  # 512-D
+   # return v.tolist()
 
 #yolo laden, bild einlesen, detektieren, Farben + Vektor extrahieren, ergebnis 2 dictionarys
 def process(image_path, db_path="shoes.db"):
     model = YOLO(WEIGHTS_FILE)
-    res   = model.predict(image_path, imgsz=640, conf=0.25, device=0)[0]
+    res = model.predict(image_path, imgsz=640, conf=0.25, device='cpu')[0]
     img   = cv2.imread(image_path)
 
     colours, vectors = {}, {}
