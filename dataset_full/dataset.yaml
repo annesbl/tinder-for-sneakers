@@ -1,11 +1,12 @@
 # dataset_full/dataset.yaml
 path: .
 train: images/train
-val:   images/val
-test:  images/test     # optional
+val: images/val
+test: images/test     # optional
 
+nc: 4
 names:
-  0: Sohle
-  1: Schnürsenkel
-  2: Farbe
-  3: ganzer_schuh
+  - Sohle
+  - Schnürsenkel
+  - Farbe
+  - ganzer_schuh
