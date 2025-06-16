@@ -5,7 +5,7 @@ import numpy as np
 from PIL import Image
 from ultralytics import YOLO
 
-import clip  
+import clip   
 import torch
 
 #MODEL SETUP 
@@ -68,8 +68,7 @@ for img_file in os.listdir(IMAGES_DIR):
             teil_bilder["schnuersenkel"] = crop
         elif teil_idx == 2:
             teil_bilder["farbe"] = crop
-
-    #Embeddings erzeugen oder als [] speichern 
+     #Embeddings erzeugen oder als [] speichern 
     embedding_sohle = json.dumps(get_clip_embedding(teil_bilder["sohle"])) if teil_bilder["sohle"] is not None else json.dumps([])
     embedding_schnuersenkel = json.dumps(get_clip_embedding(teil_bilder["schnuersenkel"])) if teil_bilder["schnuersenkel"] is not None else json.dumps([])
     embedding_farbe = json.dumps(get_clip_embedding(teil_bilder["farbe"])) if teil_bilder["farbe"] is not None else json.dumps([])
