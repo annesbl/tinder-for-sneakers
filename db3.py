@@ -31,7 +31,8 @@ c.execute('''
         strong_color TEXT,
         embedding_sohle TEXT,
         embedding_schnuersenkel TEXT,
-        embedding_farbe TEXT
+        embedding_farbe TEXT,
+        embedding_ganzer_schuh TEXT
     )
 ''')
 conn.commit()
@@ -56,22 +57,28 @@ for img_file in os.listdir(IMAGES_DIR):
     #YOLO Inferenz: Teil-Bounding-Boxes extrahieren 
     results = yolo_model(image_path)
     boxes = results[0].boxes
-    #0=sohle, 1=schnürsenkel, 2=farbe
-    teil_bilder = {"sohle": None, "schnuersenkel": None, "farbe": None}
+    #0=sohle, 1=schnürsenkel, 2=farbe, 3=ganzer_schuh
+    teil_bilder = {"sohle": None, "schnuersenkel": None, "farbe": None, "ganzer_schuh": None}
+    
     for box in boxes:
         teil_idx = int(box.cls)
         xyxy = [int(x) for x in box.xyxy[0]]
         crop = pil_image.crop(xyxy)
+        
         if teil_idx == 0:
             teil_bilder["sohle"] = crop
         elif teil_idx == 1:
             teil_bilder["schnuersenkel"] = crop
         elif teil_idx == 2:
             teil_bilder["farbe"] = crop
-     #Embeddings erzeugen oder als [] speichern 
+        elif teil_idx == 3:
+            teil_bilder["ganzer_schuh"] = crop
+    
+    #Embeddings erzeugen oder als [] speichern 
     embedding_sohle = json.dumps(get_clip_embedding(teil_bilder["sohle"])) if teil_bilder["sohle"] is not None else json.dumps([])
     embedding_schnuersenkel = json.dumps(get_clip_embedding(teil_bilder["schnuersenkel"])) if teil_bilder["schnuersenkel"] is not None else json.dumps([])
     embedding_farbe = json.dumps(get_clip_embedding(teil_bilder["farbe"])) if teil_bilder["farbe"] is not None else json.dumps([])
+    embedding_ganzer_schuh = json.dumps(get_clip_embedding(teil_bilder["ganzer_schuh"])) if teil_bilder["ganzer_schuh"] is not None else json.dumps([])
 
     #DB-Update 
     c.execute('SELECT * FROM sneakers WHERE id=?', (img_id,))
@@ -79,11 +86,11 @@ for img_file in os.listdir(IMAGES_DIR):
         c.execute('''
             INSERT INTO sneakers (
                 id, name, description, image_link, light_color, strong_color,
-                embedding_sohle, embedding_schnuersenkel, embedding_farbe
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                embedding_sohle, embedding_schnuersenkel, embedding_farbe, embedding_ganzer_schuh
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ''', (
             img_id, "", "", image_path, "", "",
-            embedding_sohle, embedding_schnuersenkel, embedding_farbe
+            embedding_sohle, embedding_schnuersenkel, embedding_farbe, embedding_ganzer_schuh
         ))
 
 conn.commit()
