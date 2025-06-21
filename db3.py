@@ -12,7 +12,7 @@ import torch
 device = "cuda" if torch.cuda.is_available() else "cpu"
 clip_model, preprocess = clip.load("ViT-B/32", device=device)
 
-YOLO_MODEL_PATH = "yolov8m_sneakers.pt"
+YOLO_MODEL_PATH = "yolov8m-seg.pt"
 yolo_model = YOLO(YOLO_MODEL_PATH)
 
 IMAGES_DIR = "images_db"
