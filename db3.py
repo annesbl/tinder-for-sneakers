@@ -4,6 +4,7 @@ import json
 import numpy as np
 from PIL import Image
 from ultralytics import YOLO
+import matplotlib.pyplot as plt
 
 import clip   
 import torch
@@ -56,6 +57,11 @@ for img_file in os.listdir(IMAGES_DIR):
     
     #YOLO Inferenz: Teil-Bounding-Boxes extrahieren 
     results = yolo_model(image_path)
+    # Visualisierung der Bounding-Boxes
+    annotated_frame = results[0].plot()
+    plt.imshow(annotated_frame)
+    plt.axis('off')  # Achsenbeschriftungen ausblenden
+    plt.show()
     boxes = results[0].boxes
     #0=sohle, 1=schnürsenkel, 2=farbe, 3=ganzer_schuh
     teil_bilder = {"sohle": None, "schnuersenkel": None, "farbe": None, "ganzer_schuh": None}
