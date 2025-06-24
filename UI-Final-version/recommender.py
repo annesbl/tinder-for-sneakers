@@ -30,7 +30,14 @@ class ShoeRecommenderWithExistingIndex:
     
     def get_diverse_starter_shoes(self, n_shoes: int = 3) -> List[str]:
         """
-        3 diverse starter shoes, as different as possible
+        Select diverse starter shoes that are as different as possible.
+        Solves the cold-start problem by maximizing diversity of initial recommendations.
+        
+        Args:
+            n_shoes: Number of starter shoes to select
+        
+        Returns:
+            List of shoe IDs for the selected diverse starter shoes
         """
         if 'ganzer_schuh' not in self.indices:
             raise ValueError("ganzer_schuh index required for diverse starter selection")
@@ -127,12 +134,12 @@ class ShoeRecommenderWithExistingIndex:
             shown_indices = set()
         
         # Exploitation or Exploration
-        use_exploration = random.random() >= (1 - exploration_rate)  # 30% Chance für Exploration
+        use_exploration = random.random() >= (1 - exploration_rate)  # 30% chance für Exploration
         
         if user_preferences and use_exploration:
             # 30% chance: Exploration - random from top X%
             explore_candidates = self._get_smart_exploration_recommendations(
-                user_preferences, 1, exploration_percentile, shown_indices, set()  
+                user_preferences, 1, exploration_percentile, shown_indices  
             )
             if explore_candidates:
                 return [explore_candidates[0]]  
@@ -155,12 +162,23 @@ class ShoeRecommenderWithExistingIndex:
     def _get_preference_based_recommendations(self, user_preferences: Dict[str, List[np.ndarray]], 
                                             n_recommendations: int, 
                                             shown_indices: set) -> List[int]:
-        """get best matching shoe based on user preferences"""
+        """
+        Get recommendations based on user preferences.
+        Finds shoes most similar to the user's averaged preference vectors.
         
-        # Nur die letzten 5 Likes pro Komponente verwenden
+        Args:
+            user_preferences: Dictionary mapping component names to lists of liked embedding vectors
+            n_recommendations: Number of recommendations to return
+            shown_indices: Set of already shown shoe indices to exclude
+        
+        Returns:
+            shoe index of shoe to recommend
+        """
+        
+        # only use likes from last 5
         recent_preferences = self._get_recent_preferences(user_preferences, recent_limit=5)
         
-        # Alle gelikten Vektoren zusammenfassen
+        # combine all liked vectors
         all_vectors = []
         for component, liked_vectors in recent_preferences.items():
             if liked_vectors:
@@ -169,18 +187,18 @@ class ShoeRecommenderWithExistingIndex:
         if not all_vectors:
             return []
         
-        # Durchschnittsvektor aller Likes
+        # calculate average preference vector
         avg_vector = np.mean(all_vectors, axis=0)
         avg_vector = avg_vector / np.linalg.norm(avg_vector)
         
-        # Den einen besten ähnlichen Schuh finden
+        # find most similar shoe
         similar_indices, distances = self.indices['ganzer_schuh'].get_nns_by_vector(
             avg_vector.tolist(),
-            len(shown_indices) + 10,  # Ein paar mehr falls manche schon gezeigt
+            len(shown_indices) + 10,  # return more shoes if best match is already shown
             include_distances=True
         )
         
-        # Ersten noch nicht gezeigten zurückgeben
+        # check if similar shoe is not already shown
         for idx in similar_indices:
             if idx not in shown_indices:
                 return [idx]
@@ -190,10 +208,20 @@ class ShoeRecommenderWithExistingIndex:
     def _get_smart_exploration_recommendations(self, user_preferences: Dict[str, List[np.ndarray]], 
                                              n_recommendations: int,
                                              exploration_percentile: float,
-                                             shown_indices: set,
-                                             already_recommended: set) -> List[int]:
+                                             shown_indices: set) -> List[int]:
         """
-        samrt Exploration - random shoe from top X%
+        Get recommendations, based on user preferences, but not the best matching shoe.
+        Random shoe from top X% of shoes similar to user preferences.
+        
+        Args:
+            user_preferences: Dictionary mapping component names to lists of liked embedding vectors
+            n_recommendations: Number of recommendations to return
+            exploration_percentile: Percentile of top similar shoes to sample from (0.5 = top 50%)
+            shown_indices: Set of already shown shoe indices to exclude
+            already_recommended: Set of already recommended shoe indices to exclude
+        
+        Returns:
+            List of recommended shoe indices from smart exploration
         """
         if not user_preferences:
             return []
@@ -226,19 +254,24 @@ class ShoeRecommenderWithExistingIndex:
         # do not recommend already shown or recommended shoes
         available_candidates = []
         for idx in similar_indices:
-            if idx not in shown_indices and idx not in already_recommended:
+            if idx not in shown_indices:
                 available_candidates.append(idx)
         
         # get random shoe from top X%
-        if len(available_candidates) <= n_recommendations:
-            return available_candidates
-        else:
-            return random.sample(available_candidates, n_recommendations)
+        return random.sample(available_candidates, n_recommendations)
     
     def _get_recent_preferences(self, user_preferences: Dict[str, List[np.ndarray]], 
-                               recent_limit: int = 5) -> Dict[str, List[np.ndarray]]:
+                               recent_limit: int = 3) -> Dict[str, List[np.ndarray]]:
         """
-        only use last N likes to get recommendations
+        Extract only the most recent preferences to avoid preference drift.
+        Keeps only the last N liked vectors per component.
+        
+        Args:
+            user_preferences: Dictionary mapping component names to lists of liked embedding vectors
+            recent_limit: Maximum number of recent preferences to keep per component
+        
+        Returns:
+            Dictionary with the same structure but containing only recent preferences
         """
         recent_prefs = {}
         for component, vectors in user_preferences.items():
@@ -258,9 +291,15 @@ class ShoeSession:
         self.onboarding_count = 0
         
     def get_next_shoe_index(self) -> int:
-        """get next shoe"""
+        """
+        Get the next shoe index to recommend based on current session state.
+        Handles onboarding phase with diverse starters, then switches to preference-based recommendations.
         
-        # Onboarding: Erste 3 diverse Schuhe
+        Returns:
+            Annoy index of the next shoe to recommend, or None if no more shoes available
+        """
+        
+        # Onboarding: first: 3 diverse shoes
         if self.is_onboarding and self.onboarding_count < 3:
             if self.onboarding_count == 0:
                 # 3 shoes as different as possible
@@ -294,11 +333,13 @@ class ShoeSession:
     
     def submit_feedback(self, annoy_idx: int, feedback: Dict[str, int]):
         """
-        User-Feedback verarbeiten
+        Process and store user feedback for a rated shoe.
+        Updates user preferences based on liked components.
         
         Args:
-            annoy_idx: Index des bewerteten Schuhs
-            feedback: {"ganzer_schuh": 1, "sohle": 0, "schnuersenkel": 1, "farbe": 0}
+            annoy_idx: Index of the rated shoe
+            feedback: Dictionary mapping component names to ratings (0=dislike, 1=like)
+                    {"ganzer_schuh": 1, "sohle": 0, "schnuersenkel": 1, "farbe": 0}
         """
         preference_vectors = self.recommender.process_user_feedback(annoy_idx, feedback)
         
@@ -306,20 +347,14 @@ class ShoeSession:
         for component, vector in preference_vectors.items():
             self.user_preferences[component].append(vector)
         
-        print(f"Feedback for index {annoy_idx}: {feedback}")
-        liked_components = [comp for comp, vectors in self.user_preferences.items() if vectors]
-        print(f"User now has preferences for: {liked_components}")
-        
-        # only use last 5 likes
-        for component, vectors in self.user_preferences.items():
-            if len(vectors) > 5:
-                print(f"  {component}: {len(vectors)} total likes, using last 5 for recommendations")
-        
-        print(f"Next recommendation will be: {'EXPLORATION' if random.random() < 0.3 else 'EXPLOITATION'} (preview)")
-
     
     def get_next_shoe_id(self) -> str:
-        """Convenience method to get the next shoe ID"""
+        """
+        Convenience method to get the next shoe ID instead of index.
+        
+        Returns:
+            Shoe ID string of the next recommendation, or None if no more shoes available
+        """
         idx = self.get_next_shoe_index()
         if idx is not None:
             return self.recommender.idx_to_shoe[idx]
@@ -327,7 +362,13 @@ class ShoeSession:
 
 
 def load_recommender():
-    """ loads the annoy index and mappings """
+    """
+    Load and initialize the shoe recommender with all Annoy indices and mappings.
+    Loads pre-built indices and mappings from disk files.
+    
+    Returns:
+        Initialized ShoeRecommenderWithExistingIndex instance ready for use
+    """
     
     # get annoy indices
     ganzer_schuh_index = AnnoyIndex(512, 'angular')
@@ -342,7 +383,7 @@ def load_recommender():
     farbe_index = AnnoyIndex(512, 'angular')
     farbe_index.load('sneakers_farbe.ann')
     
-    # get mappings
+    # get mappings, convert key to int
     with open('sneakers_ganzer_schuh_mapping.json', 'r') as f:
         ganzer_schuh_mapping = json.load(f)
         ganzer_schuh_mapping = {int(k): v for k, v in ganzer_schuh_mapping.items()}
