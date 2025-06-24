@@ -1,2 +1,21 @@
-Jinja2==3.1.6
-MarkupSafe==3.0.2
+# === Web framework (API backend) ===
+fastapi==0.111.0                  # Lightweight Python web framework for building APIs
+uvicorn==0.30.1                   # ASGI server to run FastAPI apps
+pydantic==2.7.1                   # Data validation and parsing (used with FastAPI)
+starlette==0.37.2                 # Core toolkit used internally by FastAPI (middleware, responses, etc.)
+
+# === Template rendering & static files ===
+jinja2==3.1.3                     # Templating engine for rendering HTML
+aiofiles==23.2.1                  # Required for serving static files asynchronously
+python-multipart==0.0.9          # Required if handling file uploads (e.g., image data)
+
+# === Data processing & vector similarity ===
+numpy==1.26.4                     # Core scientific computation library (used across backend)
+annoy==1.17.3                     # Approximate nearest neighbor search (used for vector-based recommendations)
+Pillow==10.3.0                    # Image processing (PIL interface)
+matplotlib==3.8.4                 # Optional: used for visualizing image features or debugging
+
+# === Machine Learning / Embeddings ===
+torch==2.3.0                      # PyTorch, required by both CLIP and YOLO models
+clip-anytorch==2.5.2              # Lightweight CLIP implementation compatible with PyTorch
+ultralytics==8.1.37               # Provides YOLOv8 and related utilities for image-based feature extraction
