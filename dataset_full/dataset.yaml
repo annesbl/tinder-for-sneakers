@@ -1,5 +1,5 @@
 # dataset_full/dataset.yaml
-path: .
+path: dataset_full
 train: images/train
 val: images/val
 test: images/test     # optional
