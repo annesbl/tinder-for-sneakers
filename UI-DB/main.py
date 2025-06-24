@@ -35,7 +35,7 @@ class FeedbackVector(BaseModel):
     """
     sohle: int
     farbe: int
-    schnuersenkel: int
+    form: int
     mehr: int
     id: int | None = None
 

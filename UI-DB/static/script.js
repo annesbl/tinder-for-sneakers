@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="like-button Farbe" data-type="farbe">
           <img src="/static/icons/heart-white.png" alt="like" class="heart-img" />
         </div>
-        <div class="like-button Schnürsenkel" data-type="schnuersenkel">
+        <div class="like-button Form" data-type="form">
           <img src="/static/icons/heart-white.png" alt="like" class="heart-img" />
         </div>
         <div class="bookmark-button">
@@ -115,7 +115,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function updateVector(type, value) {
     // Update feedback vector values
-    const indexMap = { sohle: 0, farbe: 1, schnuersenkel: 2, mehr: 3 };
+    const indexMap = { sohle: 0, farbe: 1, form: 2, mehr: 3 };
     if (type in indexMap) {
       vector[indexMap[type]] = value;
     }
@@ -153,7 +153,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const feedback = {
         sohle: vector[0],
         farbe: vector[1],
-        schnuersenkel: vector[2],
+        form: vector[2],
         mehr: vector[3],
         id: shoeStack[0].id
       };
