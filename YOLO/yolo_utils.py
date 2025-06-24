@@ -2,35 +2,54 @@ import os
 from ultralytics import YOLO
 from PIL import Image
 
-# Modell laden
+# Load the YOLO model
 MODEL_PATH = "YOLO/models/yolov8m-seg.pt"
 yolo_model = YOLO(MODEL_PATH)
 
 def detect_parts(image_path):
     """
-    Führt YOLO-Segmentierung durch und liefert ein dict mit Crops (PIL Images).
+    Run YOLO segmentation on the given image and return the detection results 
+    along with cropped parts as PIL Images.
+
+    Args:
+        image_path (str): Path to the image file.
+
+    Returns:
+        tuple: (YOLO results object, dict of cropped PIL Images for parts)
+               The dict contains keys: 'sohle', 'schnuersenkel', 'farbe', 'ganzer_schuh'.
+               If loading fails, returns (None, {}).
     """
     try:
         pil_image = Image.open(image_path).convert("RGB")
     except Exception as e:
-        print(f"⚠ Fehler beim Laden von {image_path}: {e}")
+        print(f"⚠ Error loading {image_path}: {e}")
         return None, {}
 
+    # Run YOLO inference
     results = yolo_model(image_path)
 
-    teil_bilder = {"sohle": None, "schnuersenkel": None, "farbe": None, "ganzer_schuh": None}
+    # Initialize the dictionary for storing cropped parts
+    part_images = {
+        "sohle": None,            # Sole
+        "schnuersenkel": None,    # Shoelaces
+        "farbe": None,            # Color region
+        "ganzer_schuh": None      # Whole shoe
+    }
+
+    # Process detections and crop parts
     for box in results[0].boxes:
-        teil_idx = int(box.cls)
+        part_idx = int(box.cls)
         xyxy = [int(x) for x in box.xyxy[0]]
         crop = pil_image.crop(xyxy)
 
-        if teil_idx == 0:
-            teil_bilder["sohle"] = crop
-        elif teil_idx == 1:
-            teil_bilder["schnuersenkel"] = crop
-        elif teil_idx == 2:
-            teil_bilder["farbe"] = crop
-        elif teil_idx == 3:
-            teil_bilder["ganzer_schuh"] = crop
+        # Assign the crop to the corresponding part
+        if part_idx == 0:
+            part_images["sohle"] = crop
+        elif part_idx == 1:
+            part_images["schnuersenkel"] = crop
+        elif part_idx == 2:
+            part_images["farbe"] = crop
+        elif part_idx == 3:
+            part_images["ganzer_schuh"] = crop
 
-    return results, teil_bilder
+    return results, part_images

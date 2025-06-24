@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   let shoeStack = [];
-  let vector = [0, 0, 0, 0];
+  let vector = [0, 0, 0, 0];  // User interaction feedback vector
   let isProcessingFeedback = false;
 
   function getContainer() {
@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function initShoes() {
+    // Fetch initial shoes and shuffle them
     const response = await fetch("/shoes");
     const allShoes = await response.json();
     const shuffled = allShoes.sort(() => Math.random() - 0.5);
@@ -16,6 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function renderShoes() {
+    // Render current shoes in the container
     const container = getContainer();
     container.innerHTML = "";
     const bookmarked = JSON.parse(localStorage.getItem("bookmarkedShoes") || "[]");
@@ -59,6 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function attachEventListeners() {
+    // Attach click and scroll event listeners
     const container = getContainer();
     container.removeEventListener("click", handleContainerClick);
     container.removeEventListener("scroll", handleScroll);
@@ -67,6 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function handleContainerClick(e) {
+    // Handle click events for like, bookmark, and more buttons
     if (e.target.classList.contains("heart-img")) {
       const heart = e.target;
       const isLiked = heart.classList.toggle("liked");
@@ -85,6 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function toggleBookmark(img) {
+    // Toggle bookmark icon and update local storage
     const shoeId = img.dataset.id;
     const isMarked = img.classList.toggle("marked");
     img.src = isMarked ? "/static/icons/bookmark_filled.png" : "/static/icons/bookmark.png";
@@ -98,6 +103,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function toggleDescription(button) {
+    // Show/hide product description text
     const desc = button.closest(".product-line").nextElementSibling;
     const isOpen = desc.style.display === "block";
     desc.style.display = isOpen ? "none" : "block";
@@ -108,6 +114,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function updateVector(type, value) {
+    // Update feedback vector values
     const indexMap = { sohle: 0, farbe: 1, schnuersenkel: 2, mehr: 3 };
     if (type in indexMap) {
       vector[indexMap[type]] = value;
@@ -115,6 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function throttle(func, limit) {
+    // Utility function to limit how often a function runs
     let inThrottle;
     return function () {
       if (!inThrottle) {
@@ -126,6 +134,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   const handleScroll = throttle(async function () {
+    // Handle scroll and trigger feedback processing when needed
     const container = getContainer();
     const slides = Array.from(container.getElementsByClassName("slide"));
     let currentIndex = 0;
@@ -172,6 +181,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }, 150);
 
   async function sendFeedbackAndLoadShoe(feedback) {
+    // Send feedback to server and load the next recommended shoe
     try {
       const response = await fetch("/recommend", {
         method: "POST",
@@ -193,5 +203,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // Initialize the app
   initShoes();
 });

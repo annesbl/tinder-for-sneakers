@@ -4,19 +4,19 @@ import json
 import numpy as np
 from annoy import AnnoyIndex
 
-# Dynamisch den Pfad zu sneakers.db setzen
+# Dynamically set the path to sneakers.db
 BASE_DIR = os.path.dirname(__file__)
 DB_PATH = os.path.join(BASE_DIR, "..", "UI-DB", "sneakers.db")
 DB_PATH = os.path.abspath(DB_PATH)
 
-# Verzeichnis für die Index-Dateien
+# Directory for index files
 INDEX_DIR = os.path.join(BASE_DIR, "indices")
 os.makedirs(INDEX_DIR, exist_ok=True)
 
 conn = sqlite3.connect(DB_PATH)
 c = conn.cursor()
 
-# CLIP-Embedding dimension 
+# CLIP embedding dimension
 EMBEDDING_DIM = 512
 
 # create annoy index for each component
@@ -54,7 +54,7 @@ def create_annoy_index(teil_name, embedding_column):
     with open(mapping_filename, 'w') as f:
         json.dump(index_to_id, f, indent=2)
         
-    print(f"✔ Gespeichert: {index_filename}, {mapping_filename}")
+    print(f"✔ Saved: {index_filename}, {mapping_filename}")
     return annoy_idx
 
 create_annoy_index("sohle", "embedding_sohle")
