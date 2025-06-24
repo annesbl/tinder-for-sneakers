@@ -3,6 +3,7 @@ import random
 import json
 from typing import List, Dict, Tuple
 from annoy import AnnoyIndex
+import os
 
 class ShoeRecommenderWithExistingIndex:
     def __init__(self, component_indices: Dict[str, AnnoyIndex], component_mappings: Dict[str, Dict]):
@@ -325,37 +326,36 @@ class ShoeSession:
             return self.recommender.idx_to_shoe[idx]
         return None
 
-
 def load_recommender():
     """ loads the annoy index and mappings """
-    
+    BASE_DIR = os.path.dirname(__file__)
+    INDEX_DIR = os.path.join(BASE_DIR, "indices")
+
     # get annoy indices
     ganzer_schuh_index = AnnoyIndex(512, 'angular')
-    ganzer_schuh_index.load('sneakers_ganzer_schuh.ann')
-    
     sohle_index = AnnoyIndex(512, 'angular')
-    sohle_index.load('sneakers_sohle.ann')
-    
     schnuersenkel_index = AnnoyIndex(512, 'angular')
-    schnuersenkel_index.load('sneakers_schnuersenkel.ann')
-    
     farbe_index = AnnoyIndex(512, 'angular')
-    farbe_index.load('sneakers_farbe.ann')
-    
+
+    ganzer_schuh_index.load(os.path.join(INDEX_DIR, 'sneakers_ganzer_schuh.ann'))
+    sohle_index.load(os.path.join(INDEX_DIR, 'sneakers_sohle.ann'))
+    schnuersenkel_index.load(os.path.join(INDEX_DIR, 'sneakers_schnuersenkel.ann'))
+    farbe_index.load(os.path.join(INDEX_DIR, 'sneakers_farbe.ann'))
+
     # get mappings
-    with open('sneakers_ganzer_schuh_mapping.json', 'r') as f:
+    with open(os.path.join(INDEX_DIR, 'sneakers_ganzer_schuh_mapping.json'), 'r') as f:
         ganzer_schuh_mapping = json.load(f)
         ganzer_schuh_mapping = {int(k): v for k, v in ganzer_schuh_mapping.items()}
-    
-    with open('sneakers_sohle_mapping.json', 'r') as f:
+
+    with open(os.path.join(INDEX_DIR, 'sneakers_sohle_mapping.json'), 'r') as f:
         sohle_mapping = json.load(f)
         sohle_mapping = {int(k): v for k, v in sohle_mapping.items()}
-    
-    with open('sneakers_schnuersenkel_mapping.json', 'r') as f:
+
+    with open(os.path.join(INDEX_DIR, 'sneakers_schnuersenkel_mapping.json'), 'r') as f:
         schnuersenkel_mapping = json.load(f)
         schnuersenkel_mapping = {int(k): v for k, v in schnuersenkel_mapping.items()}
-    
-    with open('sneakers_farbe_mapping.json', 'r') as f:
+
+    with open(os.path.join(INDEX_DIR, 'sneakers_farbe_mapping.json'), 'r') as f:
         farbe_mapping = json.load(f)
         farbe_mapping = {int(k): v for k, v in farbe_mapping.items()}
     
