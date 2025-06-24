@@ -109,8 +109,9 @@ http://127.0.0.1:8000
 
 ## 🌱 **Next steps / ideas**
 
-* Replace random recommendation with similarity search (Annoy + embeddings)
-* Add persistent user accounts for bookmarks
-* Deploy to cloud (e.g. PythonAnywhere, Vercel with API)
+* Refine and tune similarity search (e.g. weighting components differently, smarter exploration strategies)
+* Add persistent user accounts for bookmarks and personalized preferences
+* Deploy to cloud (e.g. PythonAnywhere, Vercel, or AWS) for public access
+* Add admin interface or API for uploading new sneaker data and regenerating indices
 
 ---
