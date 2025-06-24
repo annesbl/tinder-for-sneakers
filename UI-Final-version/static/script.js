@@ -1,7 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   let shoeStack = [];
   let vector = [0, 0, 0, 0];
-  let lastScrollIndex = 0;
   let isProcessingFeedback = false;
 
   function getContainer() {
@@ -13,7 +12,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const allShoes = await response.json();
     const shuffled = allShoes.sort(() => Math.random() - 0.5);
     shoeStack = shuffled.slice(0, 2);
-    window.remainingShoes = shuffled.slice(2);
     renderShoes();
   }
 
@@ -29,14 +27,14 @@ document.addEventListener("DOMContentLoaded", () => {
       slide.innerHTML = `
         <div class="bg-rectangle" style="background-color: ${shoe.light};"></div>
         <div class="bg-circle" style="background-color: ${shoe.strong};"></div>
-        <img class="shoe-img" src="/static/${shoe.image}" alt="${shoe.name}" />
-        <div class="like-button Sohle" data-debug="sohle-${shoe.id}" data-type="sohle">
+        <img class="shoe-img" src="/static/Shoes/${shoe.image}" alt="${shoe.name}" />
+        <div class="like-button Sohle" data-type="sohle">
           <img src="/static/icons/heart-white.png" alt="like" class="heart-img" />
         </div>
-        <div class="like-button Farbe" data-debug="farbe-${shoe.id}" data-type="farbe">
+        <div class="like-button Farbe" data-type="farbe">
           <img src="/static/icons/heart-white.png" alt="like" class="heart-img" />
         </div>
-        <div class="like-button Schnürsenkel" data-debug="schnuersenkel-${shoe.id}" data-type="schnuersenkel">
+        <div class="like-button Schnürsenkel" data-type="schnuersenkel">
           <img src="/static/icons/heart-white.png" alt="like" class="heart-img" />
         </div>
         <div class="bookmark-button">
@@ -49,7 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
           <div class="shoe-name-text">${shoe.name}</div>
           <div class="product-line">
             <span class="product-label">Produktinformationen</span>
-            <button class="more-btn" data-debug="mehr-${shoe.id}" data-type="mehr">mehr</button>
+            <button class="more-btn" data-type="mehr">mehr</button>
           </div>
           <div class="description-text" style="display:none;">${shoe.description}</div>
         </div>
@@ -57,10 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
       container.appendChild(slide);
     });
 
-    // Kleine Pause, damit Layout & Styles greifen
-    setTimeout(() => {
-      attachEventListeners();
-    }, 100);
+    setTimeout(attachEventListeners, 100);
   }
 
   function attachEventListeners() {
@@ -73,58 +68,57 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function handleContainerClick(e) {
     if (e.target.classList.contains("heart-img")) {
-      const isLiked = e.target.classList.toggle("liked");
-      e.target.src = isLiked ? "/static/icons/heart-red.png" : "/static/icons/heart-white.png";
-      const parentButton = e.target.closest('.like-button');
-      if (parentButton) updateVector(parentButton.dataset.type, isLiked ? 1 : 0);
-      return;
-    }
-
-    if (e.target.classList.contains("like-button") || e.target.closest(".like-button")) {
-      const button = e.target.closest(".like-button");
-      const heartImg = button.querySelector('.heart-img');
-      const isLiked = heartImg.classList.toggle("liked");
-      heartImg.src = isLiked ? "/static/icons/heart-red.png" : "/static/icons/heart-white.png";
-      updateVector(button.dataset.type, isLiked ? 1 : 0);
-      return;
+      const heart = e.target;
+      const isLiked = heart.classList.toggle("liked");
+      heart.src = isLiked ? "/static/icons/heart-red.png" : "/static/icons/heart-white.png";
+      const type = heart.closest(".like-button").dataset.type;
+      updateVector(type, isLiked ? 1 : 0);
     }
 
     if (e.target.classList.contains("bookmark-img")) {
-      const img = e.target;
-      const shoeId = img.dataset.id;
-      const isMarked = img.classList.toggle("marked");
-      img.src = isMarked ? "/static/icons/bookmark_filled.png" : "/static/icons/bookmark.png";
-      let bookmarks = JSON.parse(localStorage.getItem("bookmarkedShoes") || "[]");
-      if (isMarked && !bookmarks.includes(shoeId)) bookmarks.push(shoeId);
-      else if (!isMarked) bookmarks = bookmarks.filter((id) => id !== shoeId);
-      localStorage.setItem("bookmarkedShoes", JSON.stringify(bookmarks));
-      return;
+      toggleBookmark(e.target);
     }
 
     if (e.target.classList.contains("more-btn")) {
-      const desc = e.target.closest(".product-line").nextElementSibling;
-      const isOpen = desc.style.display === "block";
-      desc.style.display = isOpen ? "none" : "block";
-      e.target.textContent = isOpen ? "mehr" : "weniger";
-      if (!isOpen && vector[3] === 0) {
-        updateVector("mehr", 1);
-      }
-      return;
+      toggleDescription(e.target);
+    }
+  }
+
+  function toggleBookmark(img) {
+    const shoeId = img.dataset.id;
+    const isMarked = img.classList.toggle("marked");
+    img.src = isMarked ? "/static/icons/bookmark_filled.png" : "/static/icons/bookmark.png";
+    let bookmarks = JSON.parse(localStorage.getItem("bookmarkedShoes") || "[]");
+    if (isMarked && !bookmarks.includes(shoeId)) {
+      bookmarks.push(shoeId);
+    } else if (!isMarked) {
+      bookmarks = bookmarks.filter(id => id !== shoeId);
+    }
+    localStorage.setItem("bookmarkedShoes", JSON.stringify(bookmarks));
+  }
+
+  function toggleDescription(button) {
+    const desc = button.closest(".product-line").nextElementSibling;
+    const isOpen = desc.style.display === "block";
+    desc.style.display = isOpen ? "none" : "block";
+    button.textContent = isOpen ? "mehr" : "weniger";
+    if (!isOpen) {
+      updateVector("mehr", 1);
     }
   }
 
   function updateVector(type, value) {
     const indexMap = { sohle: 0, farbe: 1, schnuersenkel: 2, mehr: 3 };
-    if (indexMap.hasOwnProperty(type)) vector[indexMap[type]] = value;
+    if (type in indexMap) {
+      vector[indexMap[type]] = value;
+    }
   }
 
   function throttle(func, limit) {
     let inThrottle;
     return function () {
-      const args = arguments;
-      const context = this;
       if (!inThrottle) {
-        func.apply(context, args);
+        func.apply(this, arguments);
         inThrottle = true;
         setTimeout(() => inThrottle = false, limit);
       }
@@ -133,7 +127,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const handleScroll = throttle(async function () {
     const container = getContainer();
-    const slides = Array.from(container.getElementsByClassName('slide'));
+    const slides = Array.from(container.getElementsByClassName("slide"));
     let currentIndex = 0;
     let minDiff = Infinity;
 
@@ -147,12 +141,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (currentIndex === 1 && !isProcessingFeedback) {
       isProcessingFeedback = true;
-
       const feedback = {
-        sohle: vector[0] || 0,
-        farbe: vector[1] || 0,
-        schnuersenkel: vector[2] || 0,
-        mehr: vector[3] || 0,
+        sohle: vector[0],
+        farbe: vector[1],
+        schnuersenkel: vector[2],
+        mehr: vector[3],
         id: shoeStack[0].id
       };
 
@@ -162,23 +155,17 @@ document.addEventListener("DOMContentLoaded", () => {
           isProcessingFeedback = false;
           return;
         }
-
         shoeStack.shift();
         shoeStack.push(newShoe);
         renderShoes();
-
-        // Scroll sanft zurücksetzen und danach Index resetten
         requestAnimationFrame(() => {
-          const container = getContainer();
           container.scrollTo({ top: 0, behavior: "smooth" });
-
           setTimeout(() => {
-            lastScrollIndex = 0;
             isProcessingFeedback = false;
           }, 400);
         });
-      } catch (error) {
-        console.error("Fehler beim Scroll-Feedback:", error);
+      } catch (err) {
+        console.error("Fehler beim Scroll-Feedback:", err);
         isProcessingFeedback = false;
       }
     }
