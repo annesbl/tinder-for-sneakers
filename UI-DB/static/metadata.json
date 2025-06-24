@@ -2222,5 +2222,253 @@
   "image": "/Shoes/B25R11-U26S02L22-MIN.png",
   "light": "#E8E8E8",
   "strong": "#1A1A1A"
+  },
+  {
+    "id": 279,
+    "name": "Blue Horizon",
+    "description": "Der Blue Horizon überzeugt mit einem tiefen Blau und schwarzer Sohle – perfekt für urbane Abenteuer.",
+    "image": "/Shoes/frame_01176.png",
+    "light": "#144783",
+    "strong": "#1A1A1A"
+  },
+  {
+    "id": 280,
+    "name": "Nightwave",
+    "description": "Der Nightwave kombiniert edles Dunkelblau mit einer stabilen schwarzen Sohle – für einen dynamischen Auftritt.",
+    "image": "/Shoes/frame_01182.png",
+    "light": "#144783",
+    "strong": "#1A1A1A"
+  },
+  {
+    "id": 281,
+    "name": "Deep Ocean",
+    "description": "Der Deep Ocean besticht durch sein intensives Blau und die schwarze Sohle – inspiriert von der Kraft der Tiefe.",
+    "image": "/Shoes/frame_01188.png",
+    "light": "#144783",
+    "strong": "#1A1A1A"
+  },
+  {
+    "id": 282,
+    "name": "Red Thunder",
+    "description": "Der Red Thunder kombiniert sattes Dunkelrot mit tiefem Schwarz – ein mutiger Look für starke Persönlichkeiten.",
+    "image": "/Shoes/frame_01092.png",
+    "light": "#992929",
+    "strong": "#1A1A1A"
+  },
+  {
+    "id": 283,
+    "name": "Berry Storm",
+    "description": "Der Berry Storm punktet mit kräftigem Beerenrot und schwarzer Sohle – ein moderner Klassiker mit Statement-Charakter.",
+    "image": "/Shoes/frame_01098.png",
+    "light": "#8B2E2E",
+    "strong": "#1A1A1A"
+  },
+  {
+    "id": 284,
+    "name": "Crimson Path",
+    "description": "Der Crimson Path besticht durch sein intensives Rot und den dunklen Kontrast – für stilvolle Abenteuer.",
+    "image": "/Shoes/frame_01104.png",
+    "light": "#A03030",
+    "strong": "#1A1A1A"
+  },
+  {
+    "id": 285,
+    "name": "Steel Breeze",
+    "description": "Der Steel Breeze vereint ein kühles Stahlblau mit einem markanten Gelbton – ein sportlicher Look mit moderner Note.",
+    "image": "/Shoes/frame_00332.png",
+    "light": "#FFC233",
+    "strong": "#446A71"
+  },
+  {
+    "id": 286,
+    "name": "Urban Dusk",
+    "description": "Urban Dusk besticht durch ein urbanes Blau mit leuchtend gelber Sohle – perfekt für City-Abenteuer.",
+    "image": "/Shoes/frame_00338.png",
+    "light": "#FFC233",
+    "strong": "#446A71"
+  },
+  {
+    "id": 287,
+    "name": "Coastal Storm",
+    "description": "Coastal Storm verbindet ein tiefes Blaugrün mit sonnigem Gelb – inspiriert von Küste und Natur.",
+    "image": "/Shoes/frame_00344.png",
+    "light": "#FFC233",
+    "strong": "#446A71"
+  },
+  {
+    "id": 288,
+    "name": "Steel Frost",
+    "description": "Der Steel Frost überzeugt mit kühlem Stahlblau und klarer Weißsohle – minimalistisch und modern.",
+    "image": "/Shoes/frame_00403.png",
+    "light": "#F0F0F0",
+    "strong": "#3F7078"
+  },
+  {
+    "id": 289,
+    "name": "Ocean Breeze",
+    "description": "Ocean Breeze kombiniert ein tiefes Meeresblau mit frischem Weiß – ein Schuh für alle, die Freiheit lieben.",
+    "image": "/Shoes/frame_00418.png",
+    "light": "#F0F0F0",
+    "strong": "#3F7078"
+  },
+  {
+    "id": 290,
+    "name": "Arctic Flow",
+    "description": "Arctic Flow bringt eisige Coolness in dein Outfit – mit bläulich-grauem Obermaterial und weißer Sohle.",
+    "image": "/Shoes/frame_00426.png",
+    "light": "#F0F0F0",
+    "strong": "#3F7078"
+  },
+  {
+    "id": 291,
+    "name": "Crimson Edge",
+    "description": "Der Crimson Edge überzeugt mit kräftigem Rot und dunkler Sohle – ideal für einen markanten Auftritt.",
+    "image": "/Shoes/frame_00564.png",
+    "light": "#D6336C",
+    "strong": "#911D40"
+  },
+  {
+    "id": 292,
+    "name": "Ruby Rise",
+    "description": "Mit dem Ruby Rise setzt du auf ein leuchtendes Pink-Rot mit tiefroter Basis – für einen stilvollen Akzent.",
+    "image": "/Shoes/frame_00572.png",
+    "light": "#E63973",
+    "strong": "#A61E4D"
+  },
+  {
+    "id": 293,
+    "name": "Cherry Clash",
+    "description": "Der Cherry Clash verbindet lebhaftes Kirschrot mit einer robusten dunklen Sohle – auffällig und elegant zugleich.",
+    "image": "/Shoes/frame_00575.png",
+    "light": "#F03E7E",
+    "strong": "#85122D"
+  },
+  {
+    "id": 294,
+    "name": "Chestnut Blaze",
+    "description": "Der Chestnut Blaze begeistert durch ein warmes Kastanienbraun und eine leuchtend gelbe Sohle – perfekt für einen auffälligen Herbstlook.",
+    "image": "/Shoes/frame_00764.png",
+    "light": "#FBB731",
+    "strong": "#5A352C"
+  },
+  {
+    "id": 295,
+    "name": "Amber Drift",
+    "description": "Amber Drift kombiniert ein tiefes Braun mit einer sonnigen Gelbsohle – ein stilvoller Begleiter für den Alltag.",
+    "image": "/Shoes/frame_00770.png",
+    "light": "#FBB731",
+    "strong": "#5A352C"
+  },
+  {
+    "id": 296,
+    "name": "Cocoa Sun",
+    "description": "Der Cocoa Sun vereint schokoladenbraunes Obermaterial mit einer strahlend gelben Sohle – modern und elegant zugleich.",
+    "image": "/Shoes/frame_00776.png",
+    "light": "#FBB731",
+    "strong": "#5A352C"
+  },
+  {
+    "id": 297,
+    "name": "Shadow Blaze",
+    "description": "Der Shadow Blaze überzeugt mit dunklem Anthrazit und kräftigem Gelb – ein dynamischer Look für urbane Abenteurer.",
+    "image": "/Shoes/frame_00813.png",
+    "light": "#FBB731",
+    "strong": "#2A292C"
+  },
+  {
+    "id": 298,
+    "name": "Night Runner",
+    "description": "Der Night Runner besticht durch tiefes Schwarz mit markantem Gelb – perfekt für nächtliche Streifzüge.",
+    "image": "/Shoes/frame_00814.png",
+    "light": "#FBB731",
+    "strong": "#2A292C"
+  },
+  {
+    "id": 299,
+    "name": "Stealth Yellow",
+    "description": "Der Stealth Yellow kombiniert dezente Dunkeltöne mit auffälligem Gelb – ein starker Kontrast für jeden Style.",
+    "image": "/Shoes/frame_00816.png",
+    "light": "#FBB731",
+    "strong": "#2A292C"
+  },
+  {
+    "id": 300,
+    "name": "Midnight Steel",
+    "description": "Der Midnight Steel vereint tiefes Blau mit dunkler Sohle – ein eleganter Look für urbane Nächte.",
+    "image": "/Shoes/frame_00974.png",
+    "light": "#1A3F6D",
+    "strong": "#2B2A2A"
+  },
+  {
+    "id": 301,
+    "name": "Urban Blue",
+    "description": "Der Urban Blue kombiniert modernes Stahlblau mit klassischem Schwarz – perfekt für den City-Style.",
+    "image": "/Shoes/frame_00980.png",
+    "light": "#204A7F",
+    "strong": "#2B2A2A"
+  },
+  {
+    "id": 302,
+    "name": "Nightwave",
+    "description": "Mit dem Nightwave setzt du auf Understatement: Dunkelblau und Schwarz in perfekter Harmonie.",
+    "image": "/Shoes/frame_00986.png",
+    "light": "#224E84",
+    "strong": "#2B2A2A"
+  },
+  {
+    "id": 303,
+    "name": "Desert Clay",
+    "description": "Der Desert Clay besticht durch ein warmes Braun und eine dezente schwarze Sohle – für den lässigen Auftritt im Alltag.",
+    "image": "/Shoes/frame_01057.png",
+    "light": "#A17D67",
+    "strong": "#2C2B2C"
+  },
+  {
+    "id": 304,
+    "name": "Cocoa Night",
+    "description": "Der Cocoa Night vereint erdige Töne mit dunklem Kontrast – ein Klassiker für entspannte Abende.",
+    "image": "/Shoes/frame_01063.png",
+    "light": "#96725D",
+    "strong": "#2C2B2C"
+  },
+  {
+    "id": 305,
+    "name": "Sandstone Shadow",
+    "description": "Der Sandstone Shadow kombiniert natürliches Braun mit kräftigem Schwarz – stilvoll und zeitlos.",
+    "image": "/Shoes/frame_01069.png",
+    "light": "#8B6C57",
+    "strong": "#2C2B2C"
+  },
+  {
+    "id": 306,
+    "name": "Desert Walk",
+    "description": "Der Desert Walk besticht durch sein sandfarbenes Obermaterial und eine schlichte weiße Sohle – perfekt für entspannte Styles.",
+    "image": "/Shoes/frame_01152.png",
+    "light": "#F2F2F2",
+    "strong": "#8B6E58"
+  },
+  {
+    "id": 307,
+    "name": "Urban Clay",
+    "description": "Mit dem Urban Clay setzt du auf einen modernen Look: warmes Braun trifft auf klare Akzente – ein Schuh für alle Gelegenheiten.",
+    "image": "/Shoes/frame_01153.png",
+    "light": "#EFEFEF",
+    "strong": "#8B6E58"
+  },
+  {
+    "id": 308,
+    "name": "Sandstorm Edge",
+    "description": "Der Sandstorm Edge vereint dezente Farbtöne mit einer robusten Sohle – stilvoll und funktional zugleich.",
+    "image": "/Shoes/frame_01154.png",
+    "light": "#F0F0F0",
+    "strong": "#8B6E58"
+  },
+  {
+  "id": 309,
+  "name": "Rustic Flame",
+  "description": "Der Rustic Flame vereint erdige Brauntöne mit einer kräftigen roten Sohle – für einen ausdrucksstarken Auftritt.",
+  "image": "/Shoes/frame_01199.png",
+  "light": "#F5E9E9",
+  "strong": "#8B6E58"
   }
 ]
