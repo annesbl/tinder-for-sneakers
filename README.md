@@ -107,6 +107,10 @@ http://127.0.0.1:8000
 
 ---
 
+## 🌳 Decision tree (Recommendation logic)
+
+---
+
 ## 🌱 **Next steps / ideas**
 
 * Refine and tune similarity search (e.g. weighting components differently, smarter exploration strategies)
