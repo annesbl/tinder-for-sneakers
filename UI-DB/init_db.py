@@ -13,11 +13,13 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from YOLO.yolo_utils import detect_parts
 
 # --- SETUP ---
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # Absolute path to UI-DB/
 device = "cuda" if torch.cuda.is_available() else "cpu"
 clip_model, preprocess = clip.load("ViT-B/32", device=device)
-IMAGES_DIR = "UI-DB/static/Shoes"
-DB_PATH = "UI-DB/sneakers.db"
-META_PATH = "UI-DB/static/metadata.json"
+
+IMAGES_DIR = os.path.join(BASE_DIR, "static", "Shoes")
+DB_PATH = os.path.join(BASE_DIR, "sneakers.db")
+META_PATH = os.path.join(BASE_DIR, "static", "metadata.json")
 SHOW_VISUALIZATION = False
 
 # --- Load metadata ---
@@ -125,7 +127,9 @@ for img_file in os.listdir(IMAGES_DIR):
     })
 
     # Save data to the database
-    save_to_db(image_path, embeddings, meta)
+    image_path = os.path.join(IMAGES_DIR, img_file)  # ✅ Für Verarbeitung
+    web_path = img_file  # ✅ Nur Dateiname für die DB
+    save_to_db(web_path, embeddings, meta)  # ⬅️ wichtig!
 
 # Commit all changes and close the connection
 conn.commit()

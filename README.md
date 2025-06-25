@@ -96,6 +96,7 @@ pip install -r requirements.txt
 
 ```bash
 cd UI-DB
+pip install --upgrade ultralytics
 python init_db.py
 ```
 
