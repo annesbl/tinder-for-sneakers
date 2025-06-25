@@ -110,27 +110,6 @@ http://127.0.0.1:8000
 
 ---
 
-## 🌳 **Decision Tree (Recommendation Logic Concept)**
-
-The following image illustrates a **conceptual decision tree** for sneaker recommendations based on **component-level user preferences**.
-
-In the current app, users can like individual parts of a sneaker (such as the **sole**, **color**, or **laces**) using interactive heart icons. This tree visualizes how those preferences might be translated into a structured decision-making process to deliver **personalized sneaker recommendations**.
-
-
-### 🧠 What the Decision Tree Represents
-
-* Each branching point represents a **user preference** for a sneaker component (e.g., a specific sole color or lace style).
-* The tree simulates a **step-by-step filtering process**, where sneakers are narrowed down based on component matches with previously liked designs.
-* Similarity can be calculated via embeddings (e.g., CLIP vectors), but filtered based on what the user has liked most often (e.g., always black soles, or bright colors).
-
-This logic could evolve into a **rule-based or hybrid recommender** system that prioritizes certain sneaker features over others based on user behavior.
-
-> ⚠️ **Note:** This is a **conceptual visualization only**. The actual implementation of this decision tree logic has not yet been developed. Currently, sneaker recommendations are random or based on general image similarity.
-
-![Decision Tree](decision_tree/decision_tree_concept.jpg)
-
----
-
 ## 🌱 **Next Steps & Future Potential**
 
 The current app lays the foundation for a powerful, component-based sneaker recommendation system. Possible directions for future development include:
@@ -140,6 +119,8 @@ The current app lays the foundation for a powerful, component-based sneaker reco
 - **Weight sneaker parts** differently in the similarity calculation (e.g., prioritize soles if users click on soles frequently)
 - **Incorporate user history** to refine and personalize the recommendation path over time
 - Build an **explainable recommendation engine**, so users understand _why_ a sneaker was recommended (e.g., “Because you liked yellow soles and pink uppers”)
+
+> ⚠️ **Note**: During testing, the model occasionally misclassified sneaker parts – e.g., confusing the sole with the colored upper area. This suggests a need for better label quality and clearer class distinction. Additionally, **AI-generated or stylized (animated) sneakers are currently not detected at all**, as they deviate too much from real-world training data.
 
 ### 🧑‍💻 Feature Extensions
 
