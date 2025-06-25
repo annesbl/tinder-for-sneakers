@@ -12,6 +12,19 @@ Users can:
 
 ---
 
+## 🧭 Architecture Overview
+
+The diagram below illustrates the data flow within the app – from user feedback to backend processing and recommendation generation:
+
+<p align="center">
+  <img src="UI-DB/static/system_architecture.png" alt="System Architecture" width="450"/>
+</p>
+
+> 💡 The user interface collects feedback (e.g., likes) and sends it to the backend. The backend processes the input, retrieves recommendations using the Annoy-based recommender system, and loads the corresponding product information from the SQLite database.
+
+---
+
+
 ## 🚀 **Features**
 
 * **Dynamic sneaker data from SQLite (`sneakers.db`)**
