@@ -1,6 +1,6 @@
-# Sneaker Swipe App (Tinder-for-Sneakers)
+# TikTok for Sneaker
 
-A web-based sneaker discovery app that allows users to explore a collection of sneaker designs in a Tinder-like swipe experience.
+A web-based sneaker discovery app that allows users to explore a collection of sneaker designs in a TikTok-like swipe experience.
 
 Users can:
 
