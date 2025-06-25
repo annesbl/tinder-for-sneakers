@@ -56,7 +56,7 @@ def fetch_shoes_from_db():
     for row in rows:
         image_filename = row[3]
         # Remove static prefixes if present in the DB
-        image_filename = image_filename.replace("static/", "").replace("Shoes/", "")
+        image_filename = Path(row[3]).name
         shoes.append({
             "id": row[0],
             "name": row[1],
@@ -84,7 +84,7 @@ def fetch_shoe_by_id(shoe_id):
     conn.close()
 
     if row:
-        image_filename = row[3].replace("static/", "").replace("Shoes/", "")
+        image_filename = Path(row[3]).name
         return {
             "id": row[0],
             "name": row[1],
