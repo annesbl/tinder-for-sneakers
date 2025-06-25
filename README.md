@@ -39,7 +39,7 @@ Users can:
 TINDER-FOR-SNEAKERS/
 ├── recommender/                        # Recommendation logic (Annoy index + helper scripts)
 │   ├── indices/                        # Saved Annoy index files
-│   ├── create\_annoy.py                 # Script to build Annoy index from embeddings
+│   ├── create\_annoy.py                # Script to build Annoy index from embeddings
 │   └── recommender.py                  # Logic for finding similar sneakers
 ├── UI-DB/                              # App frontend + FastAPI backend
 │   ├── static/                         # Frontend assets
@@ -55,13 +55,15 @@ TINDER-FOR-SNEAKERS/
 │   │   └── style.css                   # CSS for app design (mobile-style, snap scroll, etc.)
 │   ├── templates/
 │   │   └── index.html                  # Main HTML template with app layout
-│   ├── init\_db.py                      # Script to create & populate SQLite DB with embeddings
+│   ├── init\_db.py                     # Script to create & populate SQLite DB with embeddings
 │   ├── main.py                         # FastAPI app with API routes and static file serving
 │   └── sneakers.db                     # Generated SQLite database storing sneaker data
 ├── YOLO/                               # YOLO part detection scripts & config
 │   ├── anns/                           # YOLO annotations for training/testing
 │   ├── models/                         # YOLO model files (weights, configs)
-│   └── yolo\_utils.py                   # Helper functions for YOLO processing
+│   └── yolo\_utils.py                  # Helper functions for YOLO processing
+├── decision_tree/                      # Conceptual decision logic (not yet implemented)
+│ └── decision_tree_concept.jpg         # Visual concept of rule-based sneaker recommendation
 ├── .gitignore                          # Git ignore rules
 ├── README.md                           # This documentation file
 └── requirements.txt                    # Python dependencies (FastAPI, Uvicorn, etc.)
@@ -127,19 +129,26 @@ This logic could evolve into a **rule-based or hybrid recommender** system that 
 
 ![Decision Tree](decision_tree/decision_tree_concept.jpg)
 
-### 💡 Future Potential
-
-* Use this structure to **weight different sneaker parts** in the similarity score (e.g., give more importance to soles if the user clicks on soles often).
-* Incorporate a **user history** to refine the recommendation path over time.
-* Build an **explainable recommendation engine**, where users understand *why* a sneaker was suggested (e.g., “Because you liked yellow soles and pink uppers”).
-
 ---
 
-## 🌱 **Next steps / ideas**
+## 🌱 **Next Steps & Future Potential**
 
-* Refine and tune similarity search (e.g. weighting components differently, smarter exploration strategies)
-* Add persistent user accounts for bookmarks and personalized preferences
-* Deploy to cloud (e.g. PythonAnywhere, Vercel, or AWS) for public access
-* Add admin interface or API for uploading new sneaker data and regenerating indices
+The current app lays the foundation for a powerful, component-based sneaker recommendation system. Possible directions for future development include:
+
+### 🔍 Smarter Recommendations
+
+- **Weight sneaker parts** differently in the similarity calculation (e.g., prioritize soles if users click on soles frequently)
+- **Incorporate user history** to refine and personalize the recommendation path over time
+- Build an **explainable recommendation engine**, so users understand _why_ a sneaker was recommended (e.g., “Because you liked yellow soles and pink uppers”)
+
+### 🧑‍💻 Feature Extensions
+
+- Add **persistent user accounts** to store bookmarks and preference profiles across sessions
+- Create an **admin interface or upload API** for adding new sneakers and regenerating indices dynamically
+
+### 🌐 Deployment
+
+- Deploy the app publicly using platforms like **PythonAnywhere**, **Vercel**, or **AWS**  
+- Optimize the system for speed, scalability, and mobile responsiveness
 
 ---
