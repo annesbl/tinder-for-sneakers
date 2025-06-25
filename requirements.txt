@@ -19,3 +19,4 @@ matplotlib==3.8.4                 # Optional: used for visualizing image feature
 torch==2.3.0                      # PyTorch, required by both CLIP and YOLO models
 clip-anytorch==2.5.2              # Lightweight CLIP implementation compatible with PyTorch
 ultralytics==8.1.37               # Provides YOLOv8 and related utilities for image-based feature extraction
+annoy==1.17.3                     # required for recommender to get similar images  
