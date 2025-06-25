@@ -61,9 +61,9 @@ class ShoeRecommenderWithExistingIndex:
                 min_distance = float('inf')
                 for selected_idx in selected_indices:
                     # get nearest neighbors
-                    neighbors, distances = self.indices['ganzer_schuh'].get_nns_by_item(
-                        candidate_idx, min(100, self.n_items), include_distances=True
-                    )
+                    neighbors, distances = self.indices['ganzer_schuh'].get_nns_by_item(candidate_idx, 
+                                                                                        self.n_items, 
+                                                                                        include_distances=True)
                     
                     if selected_idx in neighbors:
                         distance = distances[neighbors.index(selected_idx)]
