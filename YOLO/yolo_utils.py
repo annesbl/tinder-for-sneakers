@@ -3,7 +3,7 @@ from ultralytics import YOLO
 from PIL import Image
 
 # Load the YOLO model
-MODEL_PATH = "YOLO/models/yolov8m-seg.pt"
+MODEL_PATH = "YOLO/models/epoch90.pt"
 yolo_model = YOLO(MODEL_PATH)
 
 def detect_parts(image_path):
@@ -26,7 +26,7 @@ def detect_parts(image_path):
         return None, {}
 
     # Run YOLO inference
-    results = yolo_model(image_path)
+    results = yolo_model(image_path, conf= 0.6)
 
     # Initialize the dictionary for storing cropped parts
     part_images = {
