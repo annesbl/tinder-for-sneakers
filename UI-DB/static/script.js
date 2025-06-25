@@ -161,6 +161,7 @@ document.addEventListener("DOMContentLoaded", () => {
       try {
         const newShoe = await sendFeedbackAndLoadShoe(feedback);
         if (!newShoe || newShoe.error) {
+          console.warn("⚠️ Kein neuer Schuh geladen oder Fehler im neuen Schuh:", newShoe);
           isProcessingFeedback = false;
           return;
         }
@@ -183,6 +184,8 @@ document.addEventListener("DOMContentLoaded", () => {
   async function sendFeedbackAndLoadShoe(feedback) {
     // Send feedback to server and load the next recommended shoe
     try {
+      console.log("→ Feedback:", feedback);
+
       const response = await fetch("/recommend", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -190,13 +193,23 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
       const data = await response.json();
+      console.log("→ Recommended ID:", data.recommendedId);
+
       vector = [0, 0, 0, 0];
 
       if (!data.recommendedId) return null;
+
       const shoeRes = await fetch(`/shoe/${data.recommendedId}`);
+      console.log("→ Shoe response status:", shoeRes.status);
+
       if (!shoeRes.ok) throw new Error(`HTTP error! status: ${shoeRes.status}`);
-      return await shoeRes.json();
+
+      const newShoe = await shoeRes.json();
+      console.log("→ New shoe:", newShoe);
+
+      return newShoe;
     } catch (err) {
       console.error("Fehler beim Laden des neuen Schuhs:", err);
       return null;

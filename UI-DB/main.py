@@ -149,4 +149,11 @@ def recommend(vector: FeedbackVector):
     # Randomly pick a recommended shoe ID
     recommended_id = random.choice(possible_ids) if possible_ids else vector.id
 
+    # Debugging output
+    current_shoe = fetch_shoe_by_id(vector.id)
+    recommended_shoe = fetch_shoe_by_id(recommended_id)
+
+    print("➡️ Aktueller Schuh:", current_shoe["name"] if current_shoe else "Unbekannt")
+    print("➡️ Empfohlener Schuh:", recommended_shoe["name"] if recommended_shoe else "Unbekannt")
+
     return {"recommendedId": recommended_id}
