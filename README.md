@@ -52,7 +52,7 @@ The diagram below illustrates the data flow within the app – from user feedbac
 TINDER-FOR-SNEAKERS/
 ├── recommender/                        # Recommendation logic (Annoy index + helper scripts)
 │   ├── indices/                        # Saved Annoy index files
-│   ├── create\_annoy.py                # Script to build Annoy index from embeddings
+│   ├── create_annoy.py                 # Script to build Annoy index from embeddings
 │   └── recommender.py                  # Logic for finding similar sneakers
 ├── UI-DB/                              # App frontend + FastAPI backend
 │   ├── static/                         # Frontend assets
@@ -60,23 +60,22 @@ TINDER-FOR-SNEAKERS/
 │   │   │   ├── heart-white.png
 │   │   │   ├── heart-red.png
 │   │   │   ├── bookmark.png
-│   │   │   ├── bookmark\_filled.png
+│   │   │   ├── bookmark_filled.png
 │   │   │   └── website.png
 │   │   ├── Shoes/                      # Sneaker image files
 │   │   ├── metadata.json               # Metadata for initial DB fill (name, colors, etc.)
 │   │   ├── script.js                   # JS logic for rendering, scroll, likes, bookmarks
-│   │   └── style.css                   # CSS for app design (mobile-style, snap scroll, etc.)
+│   │   ├── style.css                   # CSS for app design (mobile-style, snap scroll, etc.)
+│   │   └── system_architecture.png     # Visual diagram of app architecture and data flow
 │   ├── templates/
 │   │   └── index.html                  # Main HTML template with app layout
-│   ├── init\_db.py                     # Script to create & populate SQLite DB with embeddings
+│   ├── init_db.py                      # Script to create & populate SQLite DB with embeddings
 │   ├── main.py                         # FastAPI app with API routes and static file serving
 │   └── sneakers.db                     # Generated SQLite database storing sneaker data
 ├── YOLO/                               # YOLO part detection scripts & config
 │   ├── anns/                           # YOLO annotations for training/testing
 │   ├── models/                         # YOLO model files (weights, configs)
-│   └── yolo\_utils.py                  # Helper functions for YOLO processing
-├── decision_tree/                      # Conceptual decision logic (not yet implemented)
-│ └── decision_tree_concept.jpg         # Visual concept of rule-based sneaker recommendation
+│   └── yolo_utils.py                   # Helper functions for YOLO processing
 ├── .gitignore                          # Git ignore rules
 ├── README.md                           # This documentation file
 └── requirements.txt                    # Python dependencies (FastAPI, Uvicorn, etc.)
