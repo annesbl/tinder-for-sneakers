@@ -117,6 +117,12 @@ python init_db.py
 ```bash
 uvicorn main:app --reload
 ```
+6. Open the app in your browser
+
+```bash
+http://127.0.0.1:8000
+```
+
 
 ---
 
