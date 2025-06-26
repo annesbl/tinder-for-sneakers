@@ -24,7 +24,6 @@ The diagram below illustrates the data flow within the app – from user feedbac
 
 ---
 
-
 ## 🚀 **Features**
 
 * **Dynamic sneaker data from SQLite (`sneakers.db`)**
@@ -86,13 +85,26 @@ TINDER-FOR-SNEAKERS/
 
 ## ⚡ **How to run**
 
-1. Install dependencies:
+1. **Clone the repository**
+
+```bash
+git clone https://github.com/annesbl/tinder-for-sneakers.git
+cd tinder-for-sneakers
+```
+
+2. **Switch to the development branch**
+
+```bash
+git checkout developer
+```
+
+3. **Install Python dependencies**
 
 ```bash
 pip install -r requirements.txt
 ```
 
-2. (Optional) Initialize DB (only if you want to recreate it):
+4. **(Optional) Reinitialize the database**
 
 ```bash
 cd UI-DB
@@ -100,16 +112,10 @@ pip install --upgrade ultralytics
 python init_db.py
 ```
 
-3. Start the server:
+5. **Start the development server**
 
 ```bash
 uvicorn main:app --reload
-```
-
-4. Open your browser:
-
-```
-http://127.0.0.1:8000
 ```
 
 ---
@@ -142,7 +148,7 @@ The current app lays the foundation for a powerful, component-based sneaker reco
 
 ### 🌐 Deployment
 
-- Deploy the app publicly using platforms like **PythonAnywhere**, **Vercel**, or **AWS**  
+- Deploy the app publicly using platforms like **PythonAnywhere**, **Vercel**, or **AWS**
 - Optimize the system for speed, scalability, and mobile responsiveness
 
 ---
